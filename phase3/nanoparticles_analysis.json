@@ -1,0 +1,172 @@
+{
+  "dataset_info": {
+    "total_variables": 13,
+    "file_path": "/mnt/common/jcernudagarcia/demo/phase3/data/nanoparticles.bp5"
+  },
+  "variables": {
+    "atoms": {
+      "AvailableStepsCount": "51",
+      "Max": "7169",
+      "Min": "0.257623",
+      "Shape": "272, 5",
+      "SingleValue": "false",
+      "Type": "double"
+    },
+    "boxxhi": {
+      "AvailableStepsCount": "51",
+      "Max": "27.2",
+      "Min": "27.2",
+      "Shape": "",
+      "SingleValue": "true",
+      "Type": "double"
+    },
+    "boxxlo": {
+      "AvailableStepsCount": "51",
+      "Max": "-27.2",
+      "Min": "-27.2",
+      "Shape": "",
+      "SingleValue": "true",
+      "Type": "double"
+    },
+    "boxyhi": {
+      "AvailableStepsCount": "51",
+      "Max": "27.2",
+      "Min": "27.2",
+      "Shape": "",
+      "SingleValue": "true",
+      "Type": "double"
+    },
+    "boxylo": {
+      "AvailableStepsCount": "51",
+      "Max": "-27.2",
+      "Min": "-27.2",
+      "Shape": "",
+      "SingleValue": "true",
+      "Type": "double"
+    },
+    "boxzhi": {
+      "AvailableStepsCount": "51",
+      "Max": "27.2",
+      "Min": "27.2",
+      "Shape": "",
+      "SingleValue": "true",
+      "Type": "double"
+    },
+    "boxzlo": {
+      "AvailableStepsCount": "51",
+      "Max": "-27.2",
+      "Min": "-27.2",
+      "Shape": "",
+      "SingleValue": "true",
+      "Type": "double"
+    },
+    "natoms": {
+      "AvailableStepsCount": "51",
+      "Max": "272",
+      "Min": "272",
+      "Shape": "",
+      "SingleValue": "true",
+      "Type": "uint64_t"
+    },
+    "ncolumns": {
+      "AvailableStepsCount": "51",
+      "Max": "5",
+      "Min": "5",
+      "Shape": "",
+      "SingleValue": "true",
+      "Type": "int32_t"
+    },
+    "nme": {
+      "AvailableStepsCount": "51",
+      "Max": "272",
+      "Min": "272",
+      "Shape": "1",
+      "SingleValue": "false",
+      "Type": "uint64_t"
+    },
+    "nprocs": {
+      "AvailableStepsCount": "51",
+      "Max": "1",
+      "Min": "1",
+      "Shape": "",
+      "SingleValue": "true",
+      "Type": "int32_t"
+    },
+    "ntimestep": {
+      "AvailableStepsCount": "51",
+      "Max": "50000",
+      "Min": "0",
+      "Shape": "",
+      "SingleValue": "true",
+      "Type": "uint64_t"
+    },
+    "offset": {
+      "AvailableStepsCount": "51",
+      "Max": "0",
+      "Min": "0",
+      "Shape": "1",
+      "SingleValue": "false",
+      "Type": "uint64_t"
+    }
+  },
+  "simulation_parameters": {
+    "boxxhi": 27.2,
+    "boxxlo": -27.2,
+    "boxyhi": 27.2,
+    "boxylo": -27.2,
+    "boxzhi": 27.2,
+    "boxzlo": -27.2,
+    "total_atoms": 272,
+    "atom_data_columns": 5,
+    "total_steps": 51,
+    "timestep_range": [
+      0,
+      50000
+    ],
+    "box_dimensions": {
+      "x": 54.4,
+      "y": 54.4,
+      "z": 54.4,
+      "volume": 160989.18399999998
+    }
+  },
+  "analysis": {
+    "atoms_analysis": {
+      "shape": "272, 5",
+      "type": "double",
+      "available_steps": "51",
+      "note": "Atom data contains: [ID, type, x_scaled, y_scaled, z_scaled]"
+    },
+    "sample_atoms_step0": {
+      "shape": [
+        272,
+        5
+      ],
+      "atom_types_present": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "9",
+        "13"
+      ],
+      "coordinate_ranges": {
+        "x_scaled": [
+          0.287824330512474,
+          0.7209738469037681
+        ],
+        "y_scaled": [
+          0.2868985574537449,
+          0.7173654986335866
+        ],
+        "z_scaled": [
+          0.4047498305301813,
+          0.5803561005239826
+        ]
+      }
+    }
+  }
+}

@@ -1,242 +1,216 @@
 #!/usr/bin/env python3
 """
-LAMMPS Nanoparticles BP5 Dataset Analysis Script
-Analyzes graphene oxide nanoparticle simulation data from ADIOS2 BP5 format
+Analyze LAMMPS GO-Nanoparticle Dataset from ADIOS2 BP5 format
 """
 
 import numpy as np
 from adios2 import FileReader
+import json
 import os
-import sys
 
-def analyze_nanoparticles_bp5(file_path):
-    """Analyze the nanoparticles.bp5 dataset"""
+def analyze_nanoparticles_dataset(bp_file_path):
+    """Analyze the nanoparticles.bp5 dataset and generate a comprehensive report"""
     
-    print("="*60)
-    print("LAMMPS GO-Nanoparticle Dataset Analysis")
-    print("="*60)
+    results = {
+        "dataset_info": {},
+        "variables": {},
+        "simulation_parameters": {},
+        "analysis": {}
+    }
     
-    # Check if file exists
-    if not os.path.exists(file_path):
-        print(f"Error: File {file_path} not found")
-        return None
-    
-    analysis_results = {}
+    print(f"Analyzing ADIOS2 dataset: {bp_file_path}")
     
     try:
-        with FileReader(file_path) as reader:
-            print(f"Successfully opened: {file_path}")
-            print()
-            
+        with FileReader(bp_file_path) as reader:
             # Get available variables
-            vars_info = reader.available_variables()
-            print("Available Variables:")
-            print("-" * 40)
+            variables = reader.available_variables()
+            print(f"Found {len(variables)} variables in the dataset")
             
-            for name, info in vars_info.items():
-                print(f"Variable: {name}")
-                for key, value in info.items():
+            results["dataset_info"]["total_variables"] = len(variables)
+            results["dataset_info"]["file_path"] = bp_file_path
+            
+            # Analyze each variable
+            for var_name, var_info in variables.items():
+                print(f"\nVariable: {var_name}")
+                for key, value in var_info.items():
                     print(f"  {key}: {value}")
-                print()
-            
-            analysis_results['variables'] = vars_info
-            
-            # Read basic simulation parameters
-            print("Simulation Parameters:")
-            print("-" * 40)
-            
-            # Number of atoms
-            natoms = reader.read("natoms")
-            print(f"Total number of atoms: {natoms}")
-            analysis_results['natoms'] = int(natoms)
-            
-            # Number of columns in atoms array
-            ncolumns = reader.read("ncolumns")
-            print(f"Number of columns in atoms array: {ncolumns}")
-            analysis_results['ncolumns'] = int(ncolumns)
-            
-            # Box dimensions
-            boxxlo = reader.read("boxxlo")
-            boxxhi = reader.read("boxxhi")
-            boxylo = reader.read("boxylo")  
-            boxyhi = reader.read("boxyhi")
-            boxzlo = reader.read("boxzlo")
-            boxzhi = reader.read("boxzhi")
-            
-            box_dims = {
-                'x': [float(boxxlo), float(boxxhi)],
-                'y': [float(boxylo), float(boxyhi)], 
-                'z': [float(boxzlo), float(boxzhi)]
-            }
-            
-            print(f"Simulation box dimensions:")
-            print(f"  X: [{box_dims['x'][0]:.2f}, {box_dims['x'][1]:.2f}] Å")
-            print(f"  Y: [{box_dims['y'][0]:.2f}, {box_dims['y'][1]:.2f}] Å")
-            print(f"  Z: [{box_dims['z'][0]:.2f}, {box_dims['z'][1]:.2f}] Å")
-            
-            box_volume = ((box_dims['x'][1] - box_dims['x'][0]) * 
-                         (box_dims['y'][1] - box_dims['y'][0]) * 
-                         (box_dims['z'][1] - box_dims['z'][0]))
-            print(f"  Box volume: {box_volume:.2f} Å³")
-            
-            analysis_results['box_dimensions'] = box_dims
-            analysis_results['box_volume'] = box_volume
-            
-            # Number of processors used
-            nprocs = reader.read("nprocs")
-            print(f"Number of processors: {nprocs}")
-            analysis_results['nprocs'] = int(nprocs)
-            
-            # Get number of steps
-            steps_available = int(vars_info['ntimestep']['AvailableStepsCount'])
-            print(f"Number of simulation steps available: {steps_available}")
-            analysis_results['total_steps'] = steps_available
-            
-            print()
-            
-            # Temporal analysis
-            print("Temporal Analysis:")
-            print("-" * 40)
-            
-            # Read all timesteps
-            timesteps = reader.read("ntimestep", step_selection=[0, steps_available])
-            print(f"Timestep range: {timesteps[0]} to {timesteps[-1]}")
-            print(f"Timestep increment: {timesteps[1] - timesteps[0] if len(timesteps) > 1 else 'N/A'}")
-            
-            # Convert timesteps to physical time (1 fs = 0.001 ps per timestep)
-            physical_times = timesteps * 0.001  # Convert to picoseconds
-            print(f"Physical time range: {physical_times[0]:.3f} to {physical_times[-1]:.3f} ps")
-            print(f"Total simulation duration: {physical_times[-1] - physical_times[0]:.3f} ps")
-            
-            analysis_results['timesteps'] = timesteps.tolist()
-            analysis_results['physical_times'] = physical_times.tolist()
-            
-            print()
-            
-            # Analyze atom types and structure
-            print("Structural Analysis:")
-            print("-" * 40)
-            
-            # Read atoms data for first and last step to analyze structure
-            try:
-                # First step
-                atoms_first = reader.read("atoms", step_selection=[0, 1])
-                atoms_first = atoms_first.reshape(int(natoms), int(ncolumns))
                 
-                # Last step  
-                atoms_last = reader.read("atoms", step_selection=[steps_available-1, 1])
-                atoms_last = atoms_last.reshape(int(natoms), int(ncolumns))
+                results["variables"][var_name] = var_info
                 
-                # Analyze atom types
-                atom_types_first = atoms_first[:, 1].astype(int)
-                unique_types, type_counts = np.unique(atom_types_first, return_counts=True)
+                # Read key variables for analysis
+                if var_name == "ntimestep":
+                    # Get total number of steps
+                    steps_count = int(var_info.get('AvailableStepsCount', 1))
+                    timesteps = reader.read(var_name, step_selection=[0, steps_count])
+                    results["simulation_parameters"]["total_steps"] = steps_count
+                    results["simulation_parameters"]["timestep_range"] = [int(timesteps.min()), int(timesteps.max())]
+                    
+                elif var_name == "natoms":
+                    natoms = reader.read(var_name)
+                    results["simulation_parameters"]["total_atoms"] = int(natoms[0]) if natoms.ndim > 0 else int(natoms)
+                    
+                elif var_name in ["boxxlo", "boxxhi", "boxylo", "boxyhi", "boxzlo", "boxzhi"]:
+                    box_val = reader.read(var_name)
+                    results["simulation_parameters"][var_name] = float(box_val[0]) if box_val.ndim > 0 else float(box_val)
                 
-                print("Atom type distribution:")
-                for atype, count in zip(unique_types, type_counts):
-                    print(f"  Type {atype}: {count} atoms")
+                elif var_name == "ncolumns":
+                    ncolumns = reader.read(var_name)
+                    results["simulation_parameters"]["atom_data_columns"] = int(ncolumns[0]) if ncolumns.ndim > 0 else int(ncolumns)
+            
+            # Calculate simulation box dimensions
+            if all(key in results["simulation_parameters"] for key in ["boxxlo", "boxxhi", "boxylo", "boxyhi", "boxzlo", "boxzhi"]):
+                box_x = results["simulation_parameters"]["boxxhi"] - results["simulation_parameters"]["boxxlo"]
+                box_y = results["simulation_parameters"]["boxyhi"] - results["simulation_parameters"]["boxylo"]  
+                box_z = results["simulation_parameters"]["boxzhi"] - results["simulation_parameters"]["boxzlo"]
                 
-                analysis_results['atom_types'] = {
-                    'types': unique_types.tolist(),
-                    'counts': type_counts.tolist()
+                results["simulation_parameters"]["box_dimensions"] = {
+                    "x": box_x,
+                    "y": box_y, 
+                    "z": box_z,
+                    "volume": box_x * box_y * box_z
+                }
+            
+            # Analyze atom data structure (first few steps only due to size)
+            if "atoms" in variables:
+                atoms_info = variables["atoms"]
+                results["analysis"]["atoms_analysis"] = {
+                    "shape": atoms_info.get("Shape", "Unknown"),
+                    "type": atoms_info.get("Type", "Unknown"),
+                    "available_steps": atoms_info.get("AvailableStepsCount", "Unknown"),
+                    "note": "Atom data contains: [ID, type, x_scaled, y_scaled, z_scaled]"
                 }
                 
-                # Convert scaled coordinates to real coordinates for analysis
-                def scaled_to_real(scaled_coords, box_dims):
-                    """Convert scaled coordinates (0-1) to real coordinates"""
-                    real_coords = np.zeros_like(scaled_coords)
-                    real_coords[:, 0] = scaled_coords[:, 0] * (box_dims['x'][1] - box_dims['x'][0]) + box_dims['x'][0]
-                    real_coords[:, 1] = scaled_coords[:, 1] * (box_dims['y'][1] - box_dims['y'][0]) + box_dims['y'][0] 
-                    real_coords[:, 2] = scaled_coords[:, 2] * (box_dims['z'][1] - box_dims['z'][0]) + box_dims['z'][0]
-                    return real_coords
+                # Sample analysis for first step
+                try:
+                    # Read atoms data for step 0 only (to avoid memory issues)
+                    atoms_step0 = reader.read("atoms", step_selection=[0, 1])
+                    if atoms_step0 is not None and atoms_step0.size > 0:
+                        results["analysis"]["sample_atoms_step0"] = {
+                            "shape": list(atoms_step0.shape),
+                            "atom_types_present": list(np.unique(atoms_step0[:, 1]).astype(int)),
+                            "coordinate_ranges": {
+                                "x_scaled": [float(atoms_step0[:, 2].min()), float(atoms_step0[:, 2].max())],
+                                "y_scaled": [float(atoms_step0[:, 3].min()), float(atoms_step0[:, 3].max())],
+                                "z_scaled": [float(atoms_step0[:, 4].min()), float(atoms_step0[:, 4].max())]
+                            }
+                        }
+                except Exception as e:
+                    results["analysis"]["atoms_read_error"] = f"Could not read atoms data: {str(e)}"
+            
+            # Calculate simulation time information
+            if "ntimestep" in results["simulation_parameters"]:
+                timestep_fs = 1.0  # 1.0 fs per timestep as per metadata
+                max_step = results["simulation_parameters"]["timestep_range"][1]
+                total_time_ps = max_step * timestep_fs / 1000.0  # Convert fs to ps
                 
-                # Analyze coordinates (columns 2, 3, 4 are x, y, z scaled coordinates)
-                coords_first_scaled = atoms_first[:, 2:5]
-                coords_last_scaled = atoms_last[:, 2:5]
-                
-                coords_first_real = scaled_to_real(coords_first_scaled, box_dims)
-                coords_last_real = scaled_to_real(coords_last_scaled, box_dims)
-                
-                # Calculate center of mass displacement
-                com_first = np.mean(coords_first_real, axis=0)
-                com_last = np.mean(coords_last_real, axis=0)
-                com_displacement = np.linalg.norm(com_last - com_first)
-                
-                print(f"\nCenter of mass analysis:")
-                print(f"  Initial COM: [{com_first[0]:.3f}, {com_first[1]:.3f}, {com_first[2]:.3f}] Å")
-                print(f"  Final COM: [{com_last[0]:.3f}, {com_last[1]:.3f}, {com_last[2]:.3f}] Å")
-                print(f"  COM displacement: {com_displacement:.3f} Å")
-                
-                # Calculate atomic displacement
-                atom_displacements = np.linalg.norm(coords_last_real - coords_first_real, axis=1)
-                max_displacement = np.max(atom_displacements)
-                mean_displacement = np.mean(atom_displacements)
-                
-                print(f"\nAtomic displacement analysis:")
-                print(f"  Maximum atomic displacement: {max_displacement:.3f} Å")
-                print(f"  Mean atomic displacement: {mean_displacement:.3f} Å")
-                
-                analysis_results['displacement_analysis'] = {
-                    'com_initial': com_first.tolist(),
-                    'com_final': com_last.tolist(), 
-                    'com_displacement': float(com_displacement),
-                    'max_atomic_displacement': float(max_displacement),
-                    'mean_atomic_displacement': float(mean_displacement)
+                results["analysis"]["temporal_info"] = {
+                    "timestep_size_fs": timestep_fs,
+                    "total_simulation_time_ps": total_time_ps,
+                    "output_frequency": "Every 1000 steps (1 ps)",
+                    "total_output_steps": results["simulation_parameters"]["total_steps"]
                 }
-                
-            except Exception as e:
-                print(f"Could not analyze atoms data: {e}")
-                print("This is expected for large datasets - atoms variable too large for direct access")
-            
-            print()
-            
-            # Data storage analysis
-            print("Data Storage Analysis:")
-            print("-" * 40)
-            print(f"Dataset format: ADIOS2 BP5")
-            print(f"Data dumps frequency: Every 1000 timesteps (every 1 ps)")
-            print(f"Coordinate format: Scaled coordinates (0-1 range)")
-            print(f"Total data points: {int(natoms) * steps_available} atom records")
-            
-            analysis_results['storage_info'] = {
-                'format': 'ADIOS2 BP5',
-                'dump_frequency': '1000 timesteps (1 ps)',
-                'coordinate_format': 'Scaled (0-1 range)',
-                'total_atom_records': int(natoms) * steps_available
-            }
-            
-            print()
-            
-    except Exception as e:
-        print(f"Error analyzing dataset: {e}")
-        return None
     
-    return analysis_results
+    except Exception as e:
+        results["error"] = f"Error analyzing dataset: {str(e)}"
+        print(f"Error: {e}")
+    
+    return results
+
+def generate_report(analysis_results):
+    """Generate a formatted report from analysis results"""
+    
+    report = []
+    report.append("# LAMMPS GO-Nanoparticle Dataset Analysis Report")
+    report.append("=" * 50)
+    
+    # Dataset Information
+    if "dataset_info" in analysis_results:
+        report.append("\n## Dataset Information")
+        info = analysis_results["dataset_info"]
+        report.append(f"- File: {info.get('file_path', 'Unknown')}")
+        report.append(f"- Total Variables: {info.get('total_variables', 'Unknown')}")
+    
+    # Simulation Parameters
+    if "simulation_parameters" in analysis_results:
+        report.append("\n## Simulation Parameters")
+        params = analysis_results["simulation_parameters"]
+        
+        if "total_atoms" in params:
+            report.append(f"- Total Atoms: {params['total_atoms']}")
+        if "total_steps" in params:
+            report.append(f"- Total Output Steps: {params['total_steps']}")
+        if "timestep_range" in params:
+            report.append(f"- Timestep Range: {params['timestep_range'][0]} - {params['timestep_range'][1]}")
+        if "atom_data_columns" in params:
+            report.append(f"- Atom Data Columns: {params['atom_data_columns']}")
+        
+        if "box_dimensions" in params:
+            box = params["box_dimensions"]
+            report.append(f"- Simulation Box: {box['x']:.1f} × {box['y']:.1f} × {box['z']:.1f} Å³")
+            report.append(f"- Box Volume: {box['volume']:.1f} Å³")
+    
+    # Analysis Results
+    if "analysis" in analysis_results:
+        report.append("\n## Analysis Results")
+        analysis = analysis_results["analysis"]
+        
+        if "temporal_info" in analysis:
+            temp = analysis["temporal_info"]
+            report.append(f"- Timestep Size: {temp['timestep_size_fs']} fs")
+            report.append(f"- Total Simulation Time: {temp['total_simulation_time_ps']} ps")
+            report.append(f"- Output Frequency: {temp['output_frequency']}")
+        
+        if "atoms_analysis" in analysis:
+            atoms = analysis["atoms_analysis"]
+            report.append(f"- Atoms Data Shape: {atoms['shape']}")
+            report.append(f"- Atoms Data Type: {atoms['type']}")
+            report.append(f"- Available Steps: {atoms['available_steps']}")
+            report.append(f"- Note: {atoms['note']}")
+        
+        if "sample_atoms_step0" in analysis:
+            sample = analysis["sample_atoms_step0"]
+            report.append(f"- Atom Types Present (Step 0): {sample['atom_types_present']}")
+            coord_ranges = sample['coordinate_ranges']
+            report.append(f"- X Coordinate Range (scaled): {coord_ranges['x_scaled'][0]:.3f} - {coord_ranges['x_scaled'][1]:.3f}")
+            report.append(f"- Y Coordinate Range (scaled): {coord_ranges['y_scaled'][0]:.3f} - {coord_ranges['y_scaled'][1]:.3f}")
+            report.append(f"- Z Coordinate Range (scaled): {coord_ranges['z_scaled'][0]:.3f} - {coord_ranges['z_scaled'][1]:.3f}")
+    
+    # Variables Information
+    if "variables" in analysis_results:
+        report.append("\n## Variables in Dataset")
+        for var_name, var_info in analysis_results["variables"].items():
+            report.append(f"- **{var_name}**: {var_info.get('Type', 'Unknown type')}")
+            if 'Shape' in var_info and var_info['Shape']:
+                report.append(f"  - Shape: {var_info['Shape']}")
+            if 'AvailableStepsCount' in var_info:
+                report.append(f"  - Steps: {var_info['AvailableStepsCount']}")
+    
+    if "error" in analysis_results:
+        report.append(f"\n## Error\n{analysis_results['error']}")
+    
+    return "\n".join(report)
 
 def main():
-    """Main analysis function"""
+    # Analyze the nanoparticles dataset
+    bp_file = "/mnt/common/jcernudagarcia/demo/phase3/data/nanoparticles.bp5"
     
-    # Path to the nanoparticles dataset
-    dataset_path = "/mnt/common/jcernudagarcia/demo/phase3/data/nanoparticles.bp5"
+    print("Starting nanoparticles dataset analysis...")
+    results = analyze_nanoparticles_dataset(bp_file)
     
-    # Perform analysis
-    results = analyze_nanoparticles_bp5(dataset_path)
+    # Generate report
+    report = generate_report(results)
+    print("\n" + "="*60)
+    print("ANALYSIS REPORT")
+    print("="*60)
+    print(report)
     
-    if results:
-        print("Analysis completed successfully!")
-        print("\nKey findings:")
-        print(f"- Dataset contains {results['natoms']} atoms across {results['total_steps']} timesteps")
-        print(f"- Simulation covers {results['physical_times'][-1]:.1f} ps of molecular dynamics")
-        print(f"- System contains {len(results['atom_types']['types'])} different atom types")
-        print(f"- Simulation box volume: {results['box_volume']:.1f} Å³")
-        
-        if 'displacement_analysis' in results:
-            print(f"- Center of mass moved {results['displacement_analysis']['com_displacement']:.3f} Å")
-            print(f"- Mean atomic displacement: {results['displacement_analysis']['mean_atomic_displacement']:.3f} Å")
-    else:
-        print("Analysis failed!")
-        return 1
+    # Save detailed results as JSON
+    with open("/mnt/common/jcernudagarcia/demo/phase3/nanoparticles_analysis.json", 'w') as f:
+        json.dump(results, f, indent=2, default=str)
     
-    return 0
+    print(f"\nDetailed analysis saved to: nanoparticles_analysis.json")
+    
+    return results, report
 
 if __name__ == "__main__":
-    sys.exit(main())
+    main()

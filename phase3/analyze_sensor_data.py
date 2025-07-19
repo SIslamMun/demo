@@ -1,245 +1,278 @@
 #!/usr/bin/env python3
 """
-Sensor Data CSV Analysis Script
-Analyzes temperature sensor data from CSV format
+Analyze Sensor Data CSV file with temperature measurements
 """
 
 import pandas as pd
 import numpy as np
-import os
-import sys
+import json
 from datetime import datetime, timedelta
 
-def analyze_sensor_data_csv(file_path):
-    """Analyze the sensor_data.csv dataset"""
+def analyze_sensor_data(csv_file_path):
+    """Analyze sensor data CSV and generate comprehensive report"""
     
-    print("="*60)
-    print("Sensor Data Temperature Analysis")
-    print("="*60)
+    results = {
+        "dataset_info": {},
+        "data_summary": {},
+        "temporal_analysis": {},
+        "statistical_analysis": {},
+        "quality_assessment": {}
+    }
     
-    # Check if file exists
-    if not os.path.exists(file_path):
-        print(f"Error: File {file_path} not found")
-        return None
-    
-    analysis_results = {}
+    print(f"Analyzing sensor data: {csv_file_path}")
     
     try:
         # Load the CSV data
-        print(f"Loading data from: {file_path}")
-        df = pd.read_csv(file_path)
-        print(f"Successfully loaded CSV with {len(df)} rows and {len(df.columns)} columns")
-        print()
+        df = pd.read_csv(csv_file_path)
+        print(f"Loaded dataset with {len(df)} records and {len(df.columns)} columns")
         
-        # Display basic info about the dataset
-        print("Dataset Overview:")
-        print("-" * 40)
-        print(f"Shape: {df.shape}")
-        print(f"Columns: {list(df.columns)}")
-        print()
+        # Basic dataset information
+        results["dataset_info"] = {
+            "file_path": csv_file_path,
+            "total_records": len(df),
+            "columns": list(df.columns),
+            "file_size_kb": round(len(open(csv_file_path, 'r').read()) / 1024, 2)
+        }
         
-        print("Column Information:")
-        print(df.info())
-        print()
-        
-        print("First few rows:")
-        print(df.head())
-        print()
-        
-        print("Last few rows:")
-        print(df.tail())
-        print()
-        
-        # Convert timestamp to datetime
+        # Convert timestamp to datetime if it's not already
         df['timestamp'] = pd.to_datetime(df['timestamp'])
         
-        # Basic statistics
-        print("Statistical Summary:")
-        print("-" * 40)
-        print(df.describe())
-        print()
-        
-        analysis_results['basic_stats'] = {
-            'shape': df.shape,
-            'columns': list(df.columns),
-            'temperature_stats': df['sensor_value'].describe().to_dict()
-        }
-        
-        # Time series analysis
-        print("Time Series Analysis:")
-        print("-" * 40)
-        
-        # Time range
-        start_time = df['timestamp'].min()
-        end_time = df['timestamp'].max()
-        duration = end_time - start_time
-        
-        print(f"Time range: {start_time} to {end_time}")
-        print(f"Total duration: {duration}")
-        
-        # Time intervals
-        time_diffs = df['timestamp'].diff().dropna()
-        avg_interval = time_diffs.mean()
-        
-        print(f"Average sampling interval: {avg_interval}")
-        print(f"Total data points: {len(df)}")
-        
-        # Check for missing timestamps
-        expected_timestamps = pd.date_range(start=start_time, end=end_time, freq=avg_interval)
-        missing_timestamps = len(expected_timestamps) - len(df)
-        print(f"Missing data points: {missing_timestamps}")
-        
-        analysis_results['temporal_analysis'] = {
-            'start_time': start_time.isoformat(),
-            'end_time': end_time.isoformat(),
-            'duration_hours': duration.total_seconds() / 3600,
-            'sampling_interval_minutes': avg_interval.total_seconds() / 60,
-            'total_points': len(df),
-            'missing_points': missing_timestamps
-        }
-        
-        # Temperature analysis
-        print("\nTemperature Analysis:")
-        print("-" * 40)
-        
-        temp_data = df['sensor_value']
-        
-        print(f"Temperature range: {temp_data.min():.2f}°C to {temp_data.max():.2f}°C")
-        print(f"Mean temperature: {temp_data.mean():.2f}°C")
-        print(f"Median temperature: {temp_data.median():.2f}°C")
-        print(f"Standard deviation: {temp_data.std():.2f}°C")
-        
-        # Temperature distribution
-        print(f"\nTemperature percentiles:")
-        percentiles = [10, 25, 50, 75, 90, 95, 99]
-        for p in percentiles:
-            print(f"  {p}th percentile: {np.percentile(temp_data, p):.2f}°C")
-        
-        # Outlier detection (using IQR method)
-        Q1 = temp_data.quantile(0.25)
-        Q3 = temp_data.quantile(0.75)
-        IQR = Q3 - Q1
-        lower_bound = Q1 - 1.5 * IQR
-        upper_bound = Q3 + 1.5 * IQR
-        
-        outliers = temp_data[(temp_data < lower_bound) | (temp_data > upper_bound)]
-        print(f"\nOutlier Analysis (IQR method):")
-        print(f"  Lower bound: {lower_bound:.2f}°C")
-        print(f"  Upper bound: {upper_bound:.2f}°C")
-        print(f"  Number of outliers: {len(outliers)}")
-        if len(outliers) > 0:
-            print(f"  Outlier values: {outliers.tolist()}")
-        
-        analysis_results['temperature_analysis'] = {
-            'min_temp': float(temp_data.min()),
-            'max_temp': float(temp_data.max()),
-            'mean_temp': float(temp_data.mean()),
-            'median_temp': float(temp_data.median()),
-            'std_temp': float(temp_data.std()),
-            'percentiles': {str(p): float(np.percentile(temp_data, p)) for p in percentiles},
-            'outliers': {
-                'count': len(outliers),
-                'values': outliers.tolist() if len(outliers) > 0 else [],
-                'lower_bound': float(lower_bound),
-                'upper_bound': float(upper_bound)
+        # Data summary
+        results["data_summary"] = {
+            "columns_info": {
+                "timestamp": {
+                    "type": "datetime",
+                    "first_timestamp": df['timestamp'].min().isoformat(),
+                    "last_timestamp": df['timestamp'].max().isoformat(),
+                    "range": str(df['timestamp'].max() - df['timestamp'].min())
+                },
+                "sensor_value": {
+                    "type": "numeric",
+                    "unit": "°C (degrees Celsius)",
+                    "data_type": str(df['sensor_value'].dtype)
+                }
             }
         }
         
-        # Trend analysis
-        print("\nTrend Analysis:")
-        print("-" * 40)
-        
-        # Calculate moving averages
-        df['temp_ma_10'] = temp_data.rolling(window=10, center=True).mean()
-        df['temp_ma_60'] = temp_data.rolling(window=60, center=True).mean()
-        
-        # Calculate rate of change
-        df['temp_change'] = temp_data.diff()
-        df['temp_change_rate'] = df['temp_change'] / (time_diffs.dt.total_seconds() / 60)  # °C per minute
-        
-        print(f"Maximum temperature increase rate: {df['temp_change_rate'].max():.4f}°C/min")
-        print(f"Maximum temperature decrease rate: {df['temp_change_rate'].min():.4f}°C/min")
-        print(f"Average absolute change rate: {df['temp_change_rate'].abs().mean():.4f}°C/min")
-        
-        # Stability analysis
-        temp_stability = df['temp_change'].abs().mean()
-        print(f"Temperature stability (avg absolute change): {temp_stability:.3f}°C")
-        
-        # Count significant changes
-        significant_changes = df[df['temp_change'].abs() > 2 * temp_data.std()]
-        print(f"Significant temperature changes (> 2σ): {len(significant_changes)}")
-        
-        analysis_results['trend_analysis'] = {
-            'max_increase_rate': float(df['temp_change_rate'].max()),
-            'max_decrease_rate': float(df['temp_change_rate'].min()),
-            'avg_change_rate': float(df['temp_change_rate'].abs().mean()),
-            'temperature_stability': float(temp_stability),
-            'significant_changes': len(significant_changes)
+        # Temporal analysis
+        time_diff = df['timestamp'].diff().dropna()
+        results["temporal_analysis"] = {
+            "measurement_interval": {
+                "mode_minutes": int(time_diff.mode()[0].total_seconds() / 60),
+                "mean_minutes": time_diff.mean().total_seconds() / 60,
+                "std_minutes": time_diff.std().total_seconds() / 60,
+                "is_regular": len(time_diff.unique()) == 1
+            },
+            "duration": {
+                "total_duration": str(df['timestamp'].max() - df['timestamp'].min()),
+                "total_hours": (df['timestamp'].max() - df['timestamp'].min()).total_seconds() / 3600,
+                "total_days": (df['timestamp'].max() - df['timestamp'].min()).days
+            }
         }
         
-        # Data quality assessment
-        print("\nData Quality Assessment:")
-        print("-" * 40)
+        # Statistical analysis
+        temp_stats = df['sensor_value'].describe()
+        results["statistical_analysis"] = {
+            "temperature_statistics": {
+                "count": int(temp_stats['count']),
+                "mean": round(temp_stats['mean'], 2),
+                "std": round(temp_stats['std'], 2),
+                "min": round(temp_stats['min'], 2),
+                "25th_percentile": round(temp_stats['25%'], 2),
+                "median": round(temp_stats['50%'], 2),
+                "75th_percentile": round(temp_stats['75%'], 2),
+                "max": round(temp_stats['max'], 2),
+                "range": round(temp_stats['max'] - temp_stats['min'], 2)
+            },
+            "temperature_distribution": {
+                "variance": round(df['sensor_value'].var(), 2),
+                "skewness": round(df['sensor_value'].skew(), 3),
+                "kurtosis": round(df['sensor_value'].kurtosis(), 3)
+            }
+        }
         
-        # Check for missing values
+        # Quality assessment
         missing_values = df.isnull().sum()
-        print(f"Missing values per column:")
-        for col, count in missing_values.items():
-            print(f"  {col}: {count}")
+        duplicates = df.duplicated().sum()
         
-        # Check for duplicated timestamps
-        duplicate_timestamps = df['timestamp'].duplicated().sum()
-        print(f"Duplicate timestamps: {duplicate_timestamps}")
+        # Check for temperature anomalies (values beyond typical room temperature range)
+        temp_values = df['sensor_value']
+        anomaly_threshold_low = 15  # Below 15°C might be unusual for room temperature
+        anomaly_threshold_high = 35  # Above 35°C might be unusual for room temperature
         
-        # Check for unrealistic temperature values (assuming reasonable range)
-        reasonable_range = (-50, 100)  # Reasonable temperature range in Celsius
-        unrealistic_temps = df[(df['sensor_value'] < reasonable_range[0]) | 
-                              (df['sensor_value'] > reasonable_range[1])]
-        print(f"Unrealistic temperature values (outside {reasonable_range}°C): {len(unrealistic_temps)}")
+        low_anomalies = (temp_values < anomaly_threshold_low).sum()
+        high_anomalies = (temp_values > anomaly_threshold_high).sum()
         
-        # Data completeness
-        data_completeness = (len(df) / len(expected_timestamps)) * 100 if len(expected_timestamps) > 0 else 100
-        print(f"Data completeness: {data_completeness:.1f}%")
-        
-        analysis_results['data_quality'] = {
-            'missing_values': missing_values.to_dict(),
-            'duplicate_timestamps': duplicate_timestamps,
-            'unrealistic_values': len(unrealistic_temps),
-            'data_completeness_percent': float(data_completeness)
+        results["quality_assessment"] = {
+            "data_completeness": {
+                "missing_timestamps": int(missing_values['timestamp']),
+                "missing_sensor_values": int(missing_values['sensor_value']),
+                "completeness_percentage": round((1 - missing_values.sum() / (len(df) * len(df.columns))) * 100, 2)
+            },
+            "data_integrity": {
+                "duplicate_records": int(duplicates),
+                "unique_timestamps": len(df['timestamp'].unique()),
+                "timestamp_duplicates": len(df) - len(df['timestamp'].unique())
+            },
+            "anomaly_detection": {
+                "low_temperature_anomalies": int(low_anomalies),
+                "high_temperature_anomalies": int(high_anomalies),
+                "total_anomalies": int(low_anomalies + high_anomalies),
+                "anomaly_percentage": round((low_anomalies + high_anomalies) / len(df) * 100, 2),
+                "threshold_low": anomaly_threshold_low,
+                "threshold_high": anomaly_threshold_high
+            }
         }
         
-        # Summary insights
-        print("\nKey Insights:")
-        print("-" * 40)
-        print(f"• Dataset spans {duration.total_seconds()/3600:.1f} hours with {len(df)} temperature measurements")
-        print(f"• Temperature varies between {temp_data.min():.1f}°C and {temp_data.max():.1f}°C")
-        print(f"• Average temperature is {temp_data.mean():.1f}°C ± {temp_data.std():.1f}°C")
-        print(f"• Data is sampled every {avg_interval.total_seconds()/60:.0f} minutes")
-        print(f"• {len(outliers)} outlier measurements detected ({len(outliers)/len(df)*100:.1f}%)")
-        print(f"• Temperature stability: ±{temp_stability:.2f}°C average change")
-        print()
+        # Additional temporal patterns
+        df['hour'] = df['timestamp'].dt.hour
+        df['day'] = df['timestamp'].dt.day
+        
+        hourly_avg = df.groupby('hour')['sensor_value'].mean()
+        daily_avg = df.groupby('day')['sensor_value'].mean()
+        
+        results["temporal_analysis"]["patterns"] = {
+            "temperature_by_hour": {
+                "min_hour": int(hourly_avg.idxmin()),
+                "max_hour": int(hourly_avg.idxmax()),
+                "min_temp": round(hourly_avg.min(), 2),
+                "max_temp": round(hourly_avg.max(), 2),
+                "hourly_variation": round(hourly_avg.max() - hourly_avg.min(), 2)
+            },
+            "temperature_trend": {
+                "first_day_avg": round(daily_avg.iloc[0], 2) if len(daily_avg) > 0 else None,
+                "last_day_avg": round(daily_avg.iloc[-1], 2) if len(daily_avg) > 0 else None,
+                "overall_trend": "increasing" if len(daily_avg) > 1 and daily_avg.iloc[-1] > daily_avg.iloc[0] else "decreasing" if len(daily_avg) > 1 else "stable"
+            }
+        }
+        
+        print("Analysis completed successfully!")
         
     except Exception as e:
-        print(f"Error analyzing dataset: {e}")
-        return None
+        results["error"] = f"Error analyzing sensor data: {str(e)}"
+        print(f"Error: {e}")
     
-    return analysis_results
+    return results
+
+def generate_sensor_report(analysis_results):
+    """Generate a formatted report from sensor analysis results"""
+    
+    report = []
+    report.append("# Sensor Data Analysis Report")
+    report.append("=" * 40)
+    
+    # Dataset Information
+    if "dataset_info" in analysis_results:
+        report.append("\n## Dataset Information")
+        info = analysis_results["dataset_info"]
+        report.append(f"- File: {info.get('file_path', 'Unknown')}")
+        report.append(f"- Total Records: {info.get('total_records', 'Unknown')}")
+        report.append(f"- Columns: {', '.join(info.get('columns', []))}")
+        report.append(f"- File Size: {info.get('file_size_kb', 'Unknown')} KB")
+    
+    # Data Summary
+    if "data_summary" in analysis_results:
+        report.append("\n## Data Summary")
+        summary = analysis_results["data_summary"]
+        
+        if "columns_info" in summary:
+            cols = summary["columns_info"]
+            if "timestamp" in cols:
+                ts_info = cols["timestamp"]
+                report.append(f"- Time Range: {ts_info.get('first_timestamp', 'Unknown')} to {ts_info.get('last_timestamp', 'Unknown')}")
+                report.append(f"- Duration: {ts_info.get('range', 'Unknown')}")
+            
+            if "sensor_value" in cols:
+                sv_info = cols["sensor_value"]
+                report.append(f"- Sensor Value Type: {sv_info.get('type', 'Unknown')}")
+                report.append(f"- Unit: {sv_info.get('unit', 'Unknown')}")
+    
+    # Temporal Analysis
+    if "temporal_analysis" in analysis_results:
+        report.append("\n## Temporal Analysis")
+        temporal = analysis_results["temporal_analysis"]
+        
+        if "measurement_interval" in temporal:
+            interval = temporal["measurement_interval"]
+            report.append(f"- Measurement Interval: {interval.get('mode_minutes', 'Unknown')} minutes")
+            report.append(f"- Regular Intervals: {'Yes' if interval.get('is_regular', False) else 'No'}")
+        
+        if "duration" in temporal:
+            duration = temporal["duration"]
+            report.append(f"- Total Duration: {duration.get('total_duration', 'Unknown')}")
+            report.append(f"- Total Hours: {duration.get('total_hours', 'Unknown'):.1f}")
+        
+        if "patterns" in temporal:
+            patterns = temporal["patterns"]
+            if "temperature_by_hour" in patterns:
+                hourly = patterns["temperature_by_hour"]
+                report.append(f"- Coolest Hour: {hourly.get('min_hour', 'Unknown')}:00 ({hourly.get('min_temp', 'Unknown')}°C)")
+                report.append(f"- Warmest Hour: {hourly.get('max_hour', 'Unknown')}:00 ({hourly.get('max_temp', 'Unknown')}°C)")
+                report.append(f"- Daily Temperature Variation: {hourly.get('hourly_variation', 'Unknown')}°C")
+    
+    # Statistical Analysis
+    if "statistical_analysis" in analysis_results:
+        report.append("\n## Statistical Analysis")
+        stats = analysis_results["statistical_analysis"]
+        
+        if "temperature_statistics" in stats:
+            temp_stats = stats["temperature_statistics"]
+            report.append(f"- Mean Temperature: {temp_stats.get('mean', 'Unknown')}°C")
+            report.append(f"- Standard Deviation: {temp_stats.get('std', 'Unknown')}°C")
+            report.append(f"- Temperature Range: {temp_stats.get('min', 'Unknown')}°C - {temp_stats.get('max', 'Unknown')}°C")
+            report.append(f"- Median Temperature: {temp_stats.get('median', 'Unknown')}°C")
+        
+        if "temperature_distribution" in stats:
+            dist = stats["temperature_distribution"]
+            report.append(f"- Variance: {dist.get('variance', 'Unknown')}")
+            report.append(f"- Skewness: {dist.get('skewness', 'Unknown')}")
+    
+    # Quality Assessment
+    if "quality_assessment" in analysis_results:
+        report.append("\n## Data Quality Assessment")
+        quality = analysis_results["quality_assessment"]
+        
+        if "data_completeness" in quality:
+            completeness = quality["data_completeness"]
+            report.append(f"- Data Completeness: {completeness.get('completeness_percentage', 'Unknown')}%")
+            report.append(f"- Missing Values: {completeness.get('missing_timestamps', 0) + completeness.get('missing_sensor_values', 0)}")
+        
+        if "data_integrity" in quality:
+            integrity = quality["data_integrity"]
+            report.append(f"- Duplicate Records: {integrity.get('duplicate_records', 'Unknown')}")
+            report.append(f"- Unique Timestamps: {integrity.get('unique_timestamps', 'Unknown')}")
+        
+        if "anomaly_detection" in quality:
+            anomaly = quality["anomaly_detection"]
+            report.append(f"- Temperature Anomalies: {anomaly.get('total_anomalies', 'Unknown')} ({anomaly.get('anomaly_percentage', 'Unknown')}%)")
+            report.append(f"- Anomaly Thresholds: {anomaly.get('threshold_low', 'Unknown')}°C - {anomaly.get('threshold_high', 'Unknown')}°C")
+    
+    if "error" in analysis_results:
+        report.append(f"\n## Error\n{analysis_results['error']}")
+    
+    return "\n".join(report)
 
 def main():
-    """Main analysis function"""
+    # Analyze the sensor data
+    csv_file = "/mnt/common/jcernudagarcia/demo/phase3/data/sensor_data.csv"
     
-    # Path to the sensor data
-    dataset_path = "/mnt/common/jcernudagarcia/demo/phase3/data/sensor_data.csv"
+    print("Starting sensor data analysis...")
+    results = analyze_sensor_data(csv_file)
     
-    # Perform analysis
-    results = analyze_sensor_data_csv(dataset_path)
+    # Generate report
+    report = generate_sensor_report(results)
+    print("\n" + "="*50)
+    print("SENSOR DATA ANALYSIS REPORT")
+    print("="*50)
+    print(report)
     
-    if results:
-        print("CSV analysis completed successfully!")
-        return 0
-    else:
-        print("CSV analysis failed!")
-        return 1
+    # Save detailed results as JSON
+    with open("/mnt/common/jcernudagarcia/demo/phase3/sensor_data_analysis.json", 'w') as f:
+        json.dump(results, f, indent=2, default=str)
+    
+    print(f"\nDetailed analysis saved to: sensor_data_analysis.json")
+    
+    return results, report
 
 if __name__ == "__main__":
-    sys.exit(main())
+    main()
