@@ -1,12 +1,10 @@
-env:
-  type: base
-
-services: []
-
-applications:
+name: gray_scott_demo
+packages:
   - name: gray_scott
-    pkg: gray_scott
-    config:
+    configuration:
       n_steps: 5
       grid_size: 8
-      output_dir: /mnt/common/jcernudagarcia/demo/phase5
+      output_dir: /mnt/common/jcernudagarcia/demo/phase5/results
+env_build:
+  enable: true
+shared_dir: /mnt/common/jcernudagarcia/demo/phase5

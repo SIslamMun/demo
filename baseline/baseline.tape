@@ -1,4 +1,4 @@
-Output baseline.mp4
+Output baseline_wait.mp4
 Require claude
 Set Theme "Catppuccin Frappe"
 Set FontFamily "FiraCode Nerd Font"
@@ -27,6 +27,8 @@ Sleep 1s
 
 Type "Hello. Who are you?"
 Enter
-Sleep 10s
+
+Wait+Screen@60s /DONE/
+
 Type "/exit"
 Enter

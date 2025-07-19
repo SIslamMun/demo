@@ -34,7 +34,7 @@ Enter
 Type "4. Document resource management decisions in `resource_allocation.md`"
 Enter
 
-Wait+Screen@300s /Phase 4: Done/
+Wait+Screen@300s /DONE/
 
 Sleep 2s
 Type "/exit"
