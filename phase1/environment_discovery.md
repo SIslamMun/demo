@@ -1,161 +1,128 @@
-# Phase 1: Environment Discovery Report
+# Environment Discovery Report
+*Generated on: 2025-07-19*
 
-## Executive Summary
-This report details the comprehensive discovery of the Ares computing cluster environment, including filesystem resources, compute infrastructure, hardware specifications, and available software modules.
+## 1. Scientific Data Files Discovery
 
-## 1. Filesystem and Scientific Data Discovery
+### Available Datasets
+- **Location**: `/mnt/common/datasets/`
+- **Total Storage**: 43.47 TB available space
+- **Key Scientific Data Found**:
 
-### Available Scientific Datasets
-The `/mnt/common` filesystem contains extensive scientific computing resources:
+#### 1000 Genome Project Data
+- **Location**: `/mnt/common/datasets/1000-genome/`
+- **Content**: Genomic variation data from multiple releases (2008-2013)
+- **Formats**: VCF.gz files, compressed genomic data
+- **Size**: Multiple phases including Phase 1 and Phase 3 releases
 
-#### Genomics and Bioinformatics
-- **1000 Genome Project Data** (`/mnt/common/datasets/1000-genome/`)
-  - Multiple release versions (2008_12, 2009_02, 2009_04, 2009_05, 2009_08, 20100804)
-  - CEU, YRI, and JPTCHB population datasets
-  - SNP and indel call data in various formats (.gz, .vcf)
+#### FlexTRKR Climate Data
+- **Location**: `/mnt/common/datasets/flextrkr/`
+- **Content**: Meteorological Convective System (MCS) tracking data
+- **Formats**: NetCDF (.nc) files
+- **Example Files**:
+  - `mcs_tracks_20040301.0000_20041101.0000.nc`
+  - `mcs_tracks_20050301.0000_20051101.0000.nc`
+  - Coverage from 2004-2013
 
-#### Weather and Climate Modeling
-- **TeraFusion datasets** (`/mnt/common/datasets/TeraFusion/`)
-- **FlexTRKR tracking data** (`/mnt/common/datasets/flextrkr/`)
-  - PyFLEXTRKR manuscript data (2022)
-  - NEXRAD reflectivity data
-  - Sample datasets (20230517)
+#### Other Datasets
+- **Beacon Traces**: Performance monitoring data
+- **Darshan Traces**: HPC I/O performance traces from ANL systems
+- **TeraFusion**: Scientific computing datasets
+- **DeepDriveMD**: Molecular dynamics simulation data
 
-#### Molecular Dynamics and Materials Science
-- **DeepDriveMD datasets** (`/mnt/common/datasets/deepdrivemd/`)
-- **MyRA simulation data** (`/mnt/common/datasets/MyRA/`)
-- **VASP calculations** (H2O-1024p datasets)
-
-#### I/O and Performance Analysis
-- **Darshan I/O traces** (`/mnt/common/datasets/Darshan_traces/`)
-- **Beacon tracing data** (`/mnt/common/datasets/Beacon_traces/`)
-
-#### User Research Projects
-- Extensive user directories containing:
-  - LAMMPS molecular dynamics simulations
-  - WRF weather modeling
-  - OpenFOAM fluid dynamics
-  - HDF5 and ADIOS2 I/O benchmarks
-  - Hermes storage system data
-
-## 2. Slurm Cluster Status and Resources
+## 2. Slurm Cluster Status
 
 ### Cluster Configuration
 - **Cluster Name**: slurm-cluster
-- **Slurm Version**: 21.08.5
-- **Total Nodes**: 32 compute nodes (ares-comp-01 through ares-comp-32)
+- **Version**: slurm-wlm 21.08.5
+- **Total Nodes**: 32 compute nodes (ares-comp-01 to ares-comp-32)
 
 ### Node Status Summary
-- **Idle Nodes**: 17 nodes available for scheduling
-  - ares-comp-[06,08,10,12,14,16,18,19,21,23,25,27,28,29,30,31,32]
-- **Down Nodes**: 13 nodes currently offline
-  - ares-comp-[01,02,04,05,07,09,11,15,17,20,22,24,26]
-- **Drained Nodes**: 2 nodes administratively disabled
-  - ares-comp-[03,13]
+- **Idle Nodes**: 4 nodes (ares-comp-27 to ares-comp-30)
+- **Allocated Nodes**: 13 nodes currently in use
+- **Down Nodes**: 13 nodes offline
+- **Drained Nodes**: 2 nodes under maintenance
 
-### Partition Configuration
-- **Partition**: compute
-- **Time Limit**: 2 days (2-00:00:00)
-- **Current Queue**: Empty (0 running/pending jobs)
-
-### Available Computing Resources
-- **Available CPUs**: 680 cores (17 idle nodes × 40 cores each)
-- **Total Theoretical Capacity**: 1,280 cores (32 nodes × 40 cores each)
-- **Current Utilization**: 0% (no running jobs)
+### Resource Availability
+- **Available CPUs**: 160 cores (4 idle nodes × 40 cores each)
+- **Partition**: compute (2-day time limit)
+- **Currently Running Jobs**: 1 interactive job (520 CPUs allocated)
 
 ## 3. Hardware Specifications
 
-### Current Node Hardware (Login/Compute Node)
-- **CPU**: Intel(R) Xeon(R) Silver 4114 @ 2.20GHz
-  - **Architecture**: x86_64
-  - **Sockets**: 2
-  - **Cores per Socket**: 10
-  - **Threads per Core**: 2
-  - **Total Logical CPUs**: 40
-  - **Cache**: L1d: 640 KiB, L1i: 640 KiB, L2: 20 MiB
-  - **Features**: AVX-512, Intel VT-x, Hardware Security (Intel PT, MPX)
+### CPU Configuration
+- **Processor**: Intel(R) Xeon(R) Silver 4114 CPU @ 2.20GHz
+- **Physical Cores**: 20 per node
+- **Logical Cores**: 40 per node (hyperthreading enabled)
+- **Current Frequency**: ~2115 MHz
+- **Architecture**: x86_64
 
-- **Memory**: 94 GiB total RAM
-  - **Available**: 83 GiB free
-  - **Swap**: 8.0 GiB
-  - **Current Usage**: ~9 GiB used (10% utilization)
+### Memory Configuration
+- **Total RAM**: 94.07 GB per node
+- **Available Memory**: 82.25 GB (87% free)
+- **Swap Space**: 8.00 GB
+- **Memory Utilization**: 12.6% (good utilization)
 
-- **Storage**: 
-  - **Root Filesystem**: 1007 GiB total, 662 GiB available (31% used)
-  - **Shared Storage**: Extensive `/mnt/common` with scientific datasets
+### Storage Systems
+- **Primary Storage**: 
+  - Root filesystem: 1006.85 GB (29.2% used)
+  - Common storage: 43.47 TB (14.3% used) - mounted at `/mnt/common`
+  - Repository storage: 99.95 GB (73.6% used) - mounted at `/mnt/repo`
 
-## 4. Software Environment and Modules
+### System Information
+- **Operating System**: Ubuntu Linux 5.15.0-143-generic
+- **Hostname**: ares.ares.local
+- **Uptime**: 15 days (stable system)
+- **Active Users**: 16 concurrent users
 
-### Module Systems Available
-- **Lmod**: Successfully configured and functional
-- **Multiple Module Paths**:
-  - Spack-managed modules (primary)
-  - Repository software modules
-  - User-specific modules
+## 4. Software Environment
 
-### Key Scientific Software Available
+### Module System Status
+- **Environment Modules**: Not available/not installed
+- **Lmod**: Not found in system PATH
+- **Alternative**: Software likely managed through system packages or custom installations
 
-#### High-Performance Computing Libraries
-- **MPI**: OpenMPI 5.0.5
-- **Compilers**: GCC 11.4.0
-- **Build Systems**: CMake 3.30.5, Autotools suite
+### Available Software (System Level)
+Based on filesystem exploration:
+- Standard Linux development tools
+- MPI implementations likely available
+- Scientific computing libraries present in user directories
+- Container systems (evidence of various containerized applications)
 
-#### I/O and Data Management
-- **ADIOS2**: Multiple versions (2.9.0, 2.10.2) with MPI support
-- **HDF5**: Versions 1.14.0, 1.14.5 (parallel-enabled)
-- **NetCDF**: NetCDF-C 4.9.2, NetCDF-Fortran 4.6.1
-- **Parallel-NetCDF**: 1.12.3
+## 5. Network and Connectivity
 
-#### Storage and I/O Systems
-- **Hermes**: 1.2.1 (distributed storage system)
-- **OrangeFS**: 2.9.8, 2.10 (parallel filesystem)
-- **Darshan**: 3.4.6 (I/O characterization)
+### Network Interfaces
+- **Primary Network**: Active Ethernet connections
+- **InfiniBand**: Available (based on device listings in /dev/)
+- **High-Performance Interconnect**: Suitable for MPI applications
 
-#### Scientific Applications
-- **LAMMPS**: 20240829.1 (molecular dynamics)
-- **WRF**: 4.6.1 (weather modeling)
-- **OpenFOAM**: 2312 (computational fluid dynamics)
-- **ParaView**: 5.13.1 (visualization)
-- **Montage**: 6.0 (astronomical image processing)
-
-#### Data Analysis and Compression
-- **Python**: 3.11.9, 3.13.0 with scientific stack
-- **Compression**: zstd, lz4, bzip2, sz (lossy compression)
-- **Arrow**: 15.0.1 (columnar data format)
-
-#### Performance and Debugging Tools
-- **IOWarp**: I/O workload analysis and replay
-- **IOR**: 3.3.0 (I/O benchmarking)
-- **Jarvis-CD**: Continuous delivery for HPC
-
-#### Specialized Research Tools
-- **MGARD**: Error-bounded lossy compression
-- **Mercury/Margo/Thallium**: High-performance RPC framework
-- **Chi-nettest**: Network testing framework
-
-## 5. Environment Assessment Summary
+## 6. Assessment Summary
 
 ### Strengths
-1. **Rich Scientific Dataset Repository**: Extensive collection covering genomics, climate, materials science
-2. **Modern Software Stack**: Up-to-date versions of key HPC software
-3. **Diverse I/O Ecosystem**: Multiple storage systems and I/O libraries available
-4. **Comprehensive Module System**: Well-organized software environment via Spack/Lmod
+1. **Large-scale data availability**: 43+ TB of scientific datasets
+2. **Substantial compute resources**: 32 nodes with 40 cores each
+3. **Good memory capacity**: ~94 GB per node
+4. **Stable system**: 15-day uptime indicates reliability
+5. **High-performance storage**: XFS filesystem on large storage array
+6. **Diverse scientific datasets**: Genomics, climate, and HPC performance data
 
-### Current Limitations
-1. **Reduced Compute Capacity**: 59% of nodes currently unavailable (15 down/drained)
-2. **No Active Workload**: Cluster currently idle, may indicate maintenance period
+### Limitations
+1. **Node availability**: Only 4/32 nodes currently idle
+2. **Module system**: No environment modules system detected
+3. **Partial cluster**: 13 nodes down, 2 drained
+4. **Software management**: May require manual environment setup
 
-### Recommendations for Scientific Computing
-1. **Data-Intensive Workflows**: Excellent support for genomics, climate, and molecular dynamics
-2. **I/O Performance Studies**: Rich ecosystem for storage system research
-3. **Multi-Scale Simulations**: Good support for coupled simulations across disciplines
-4. **Workflow Development**: Strong foundation for scientific workflow automation
+### Recommendations
+1. **Resource allocation**: Use available idle nodes (ares-comp-27 to 30)
+2. **Data processing**: Leverage existing scientific datasets for analysis
+3. **Workflow planning**: Consider 2-day job time limits
+4. **Software setup**: Prepare custom environment configurations
+5. **Monitoring**: Track node status before large job submissions
 
-### Next Steps
-1. Verify node availability and maintenance schedules
-2. Test job submission and resource allocation
-3. Validate data access patterns and performance
-4. Establish baseline performance metrics
+## 7. Next Steps for Phase 2
 
----
-*Generated on 2025-07-19 as part of Phase 1 Environment Discovery*
+Based on this environment discovery:
+1. Focus on the 4 available idle nodes for initial testing
+2. Utilize existing scientific datasets (1000 Genome, FlexTRKR)
+3. Prepare containerized or manually-configured software environments
+4. Design workflows that can complete within 2-day time limits
+5. Consider the high I/O capacity for data-intensive applications
