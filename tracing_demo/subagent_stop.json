@@ -1,0 +1,9 @@
+[
+  {
+    "session_id": "bc70499f-a369-49a7-a2b3-758cff00ad6b",
+    "transcript_path": "/home/jcernuda/.claude/projects/-home-jcernuda-demo-tracing-demo-iowarp-runtime/bc70499f-a369-49a7-a2b3-758cff00ad6b.jsonl",
+    "cwd": "/home/jcernuda/demo/tracing_demo/iowarp-runtime",
+    "hook_event_name": "SubagentStop",
+    "stop_hook_active": false
+  }
+]
