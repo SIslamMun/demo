@@ -1,32 +1,55 @@
 # Resource Allocation Report - Phase 4
 
-## Overview
-Phase 4 demonstrated adaptive resource management by initially requesting 8 nodes, discovering resource constraints, and successfully adapting to allocate the available 4 nodes.
+## Resource Management Strategy
 
-## Initial Resource Request
-- **Requested**: 8 nodes
-- **Status**: Allocation timed out after 60 seconds
-- **Action**: Cancelled pending job (ID: 4941)
+### Initial Request
+- **Target Nodes**: 8 nodes for optimal resource allocation
+- **Rationale**: Maximize computational resources for distributed workloads
 
-## Cluster Analysis
-- **Available Resources**: 4 idle nodes (ares-comp-[27-30])
-- **Constraint**: 13 nodes already allocated to another job
-- **Drained/Down**: 15 nodes unavailable
+### Constraint Discovery
+- **Issue**: Initial 8-node allocation request timed out after 60 seconds
+- **Analysis**: Cluster inspection revealed limited availability
+  - Total nodes in cluster: 32
+  - Available (idle) nodes: 4
+  - Allocated nodes: 13
+  - Down/drained nodes: 15
 
-## Adaptive Strategy
-- **Adapted to**: 4 nodes (100% of available resources)
-- **Allocation ID**: 4942
+### Adaptive Strategy
+- **Adapted Target**: 4 nodes (all available idle nodes)
+- **Allocation ID**: 4944
 - **Time Limit**: 3 hours
 - **Status**: Successfully allocated
 
-## Final Resource Allocation
+## Allocated Resources
+
+### Node Details
+- **ares-comp-27**: 40 cores, idle → allocated
+- **ares-comp-28**: 40 cores, idle → allocated  
+- **ares-comp-29**: 40 cores, idle → allocated
+- **ares-comp-30**: 40 cores, idle → allocated
+
+### Total Allocated Resources
 - **Nodes**: 4
-- **Node List**: ares-comp-27, ares-comp-28, ares-comp-29, ares-comp-30
-- **Hostfile**: jarvis.hostfile created
+- **Total Cores**: 160 (40 cores per node)
+- **Memory**: Standard allocation per node
+- **Duration**: 3 hours maximum
 
 ## Resource Management Decisions
-1. **Proactive Resource Discovery**: Checked cluster status to understand availability
-2. **Adaptive Scaling**: Reduced from 8 to 4 nodes based on actual availability
-3. **Optimal Utilization**: Secured 100% of available idle resources
-4. **Time Management**: Set 3-hour allocation window for sufficient runtime
-EOF < /dev/null
+
+### Key Decisions Made
+1. **Adaptive Scaling**: Reduced from 8 to 4 nodes based on actual availability
+2. **Complete Utilization**: Allocated all available idle nodes
+3. **Time Management**: Set 3-hour allocation window for sufficient runtime
+4. **Hostfile Generation**: Created `/jarvis.hostfile` with allocated node list
+
+### Lessons Learned
+- Resource constraints require adaptive strategies
+- Real-time cluster status assessment is critical
+- Timeout handling prevents indefinite waiting
+- Complete resource utilization maximizes efficiency given constraints
+
+## Outcomes
+- ✅ Successfully secured compute resources
+- ✅ Generated hostfile for distributed operations
+- ✅ Documented resource management decisions
+- ✅ Established foundation for subsequent phases

@@ -1,186 +1,164 @@
-# Environment Discovery Report - Phase 1
+# Environment Discovery Report
 
 ## Executive Summary
 
-This report presents a comprehensive assessment of the Ares HPC cluster environment, including available data resources, cluster configuration, hardware specifications, and software modules. The analysis reveals a well-equipped scientific computing environment with significant computational resources and specialized tools for data-intensive research.
+This report provides a comprehensive assessment of the HPC cluster environment, including available scientific data files, cluster resources, hardware specifications, and software modules. The cluster appears to be a well-equipped research environment with substantial computational resources and a rich ecosystem of scientific computing tools.
 
-## 1. Scientific Data Inventory
+## 1. Scientific Data Files Discovery
 
-### 1.1 Available Data Formats and Locations
-The filesystem exploration revealed scientific datasets in the following locations:
+### Filesystem Analysis
+The filesystem exploration revealed extensive scientific datasets across multiple categories:
 
-#### Key Data Repositories:
-- **User Data**: `/mnt/common/user-data/mtang11/hermes_stage/`
-  - Contains HDF5 I/O test data (CSV format)
-  - Hermes VFD benchmarking data
-  - Build and configuration files
+#### 1000 Genome Project Data
+- **Location**: `/mnt/common/datasets/1000-genome/`
+- **Data Range**: 2008-2013 genomic sequencing data
+- **File Types**: VCF files, genotype data, SNP/indel calls
+- **Notable Datasets**:
+  - Phase 1 (2008-2011): CEU, YRI, JPTCHB populations
+  - Phase 3 (2013): Complete genomic variant data
+  - Consensus indel calls and structural variants
 
-#### Limited Data Discovery:
-- **Chrome/Chromium Configuration**: Various JSON files in backup directories
-- **Spack Package Management**: Extensive JSON schema files and configurations
-- **Build Artifacts**: CMake and development tool configurations
+#### HPC I/O Benchmark Data
+- **Darshan Traces**: Performance monitoring data from ANL-ALCF systems
+  - Mira cluster traces (2017-2019)
+  - Theta cluster traces (2017-2019)
+- **Beacon Traces**: Elasticsearch monitoring data with latency and forwarding metrics
+- **Access Pattern Data**: Parquet files with I/O access patterns from various simulations
 
-### 1.2 Data Access Patterns
-Analysis of existing data shows:
-- Limited scientific datasets currently accessible
-- Configuration and system files primarily in JSON format
-- Build and development environments present
+#### Scientific Computing Datasets
+- **TeraFusion**: Remote sensing data processing
+- **DeepDriveMD**: Molecular dynamics simulation data
+- **FlexTRKR**: Meteorological tracking data
+- **MyRA**: Research collaboration and publication datasets
+- **Coeus**: Deployment and configuration data
 
-## 2. Cluster Resource Assessment
+#### Simulation and Modeling Data
+- **Molecular Dynamics**: LAMMPS simulation outputs, water-ethanol systems
+- **CFD Data**: 2D Lennard-Jones fluid simulations
+- **Weather Data**: WRF model inputs and meteorological datasets
+- **HDF5/ADIOS Files**: Various scientific data formats for parallel I/O
 
-### 2.1 Slurm Cluster Configuration
+## 2. Cluster Status and Resources (Slurm)
+
+### Cluster Configuration
 - **Cluster Name**: slurm-cluster
-- **Slurm Version**: 21.08.5
-- **Total Nodes**: 32 compute nodes (`ares-comp-[01-32]`)
+- **Slurm Version**: slurm-wlm 21.08.5
+- **Total Nodes**: 32 compute nodes (ares-comp-01 through ares-comp-32)
 
-#### Node Status Distribution:
-- **Available/Mixed**: 4 nodes (`ares-comp-[27-30]`) - 2 CPUs allocated, 38 idle per node
-- **Allocated**: 13 nodes (fully allocated)
-- **Down**: 13 nodes (maintenance/offline)
-- **Drained**: 2 nodes (`ares-comp-[03,13]`) - administrative hold
+### Node Status Distribution
+- **Down Nodes**: 13 nodes (ares-comp-01, 02, 04, 05, 07, 09, 11, 15, 17, 20, 22, 24, 26)
+- **Drained Nodes**: 2 nodes (ares-comp-03, 13)
+- **Allocated Nodes**: 13 nodes (fully utilized)
+- **Mixed Nodes**: 4 nodes (ares-comp-27-30) with partial utilization
 
-#### Resource Specifications per Node:
-- **CPUs**: 40 cores per node
-- **Memory**: Not specified in node info (shows "1" placeholder)
-- **Time Limit**: 2 days maximum job duration
+### Current Job Activity
+- **Running Jobs**: 2 active jobs
+  - Job 4912: Interactive session (13 nodes, 520 CPUs, running 3:54:20)
+  - Job 4942: MCP allocation (4 nodes, 8 CPUs, running 31:10)
 
-#### Current Utilization:
-- **Active Jobs**: 2 running
-  - Job 4912: Interactive session (13 nodes, 520 CPUs, 3:33:48 runtime)
-  - Job 4942: MCP allocation (4 nodes, 8 CPUs, 10:38 runtime)
-- **Queue Status**: No pending jobs
-- **Available Capacity**: 4 mixed nodes with 152 idle cores total
-
-### 2.2 Partition Configuration
-- **Primary Partition**: `compute`
-- **Access Policy**: Standard HPC scheduling with 2-day time limits
-- **Resource Allocation**: Dynamic based on job requirements
+### Partition Configuration
+- **Partition**: compute
+- **Time Limit**: 2 days (2-00:00:00)
+- **Available Resources**: Limited due to high allocation
 
 ## 3. Hardware Specifications
 
-### 3.1 CPU Configuration
-- **Processor**: Intel(R) Xeon(R) Silver 4114 CPU @ 2.20GHz
-- **Architecture**: x86_64
+### CPU Configuration
+- **Model**: Intel(R) Xeon(R) Silver 4114 CPU @ 2.20GHz
+- **Architecture**: x86_64 (skylake_avx512)
 - **Physical Cores**: 20 per node
 - **Logical Cores**: 40 per node (hyperthreading enabled)
-- **Current Frequency**: 2.17 GHz average
-- **Load Average**: 4.63 (1-min), 3.53 (5-min), 3.74 (15-min)
-- **Average CPU Usage**: 9.78% across all cores
+- **Current Frequency**: 2147.58 MHz
+- **Average Usage**: 9.48% (relatively low utilization)
+- **Load Average**: 5.39 (1min), 4.69 (5min), 4.41 (15min)
 
-### 3.2 Memory Configuration
+### Memory Configuration
 - **Total Memory**: 94.07 GB per node
-- **Available Memory**: 82.05 GB
-- **Used Memory**: 11.11 GB (12.8% utilization)
-- **Swap Space**: 8.00 GB (0.8% used - 65.13 MB)
-- **Cached Memory**: 77.80 GB
-- **Memory Efficiency**: Excellent availability for large-scale computations
+- **Available Memory**: 82.31 GB
+- **Used Memory**: 10.85 GB (12.5% utilization)
+- **Cached Memory**: 78.02 GB (large cache for I/O optimization)
+- **Swap Space**: 8.00 GB (0.8% utilization)
+- **Memory Type**: DDR4 with excellent availability
 
-### 3.3 Storage Configuration
-- **Root Partition** (`/`): 1006.85 GB total, 661.07 GB free (29.3% used)
-- **Common Storage** (`/mnt/common`): 43.47 TB total, 37.25 TB free (14.3% used)
-- **Repository Storage** (`/mnt/repo`): 99.95 GB total, 26.39 GB free (73.6% used)
-- **Boot EFI**: 299.39 MB total, 293.30 MB free (2.0% used)
+### Network Infrastructure
+- **Primary Interface**: eno1 (1 Gbps external connectivity)
+- **Cluster Network**: eno2 (1 Gbps internal connectivity)
+- **High-Speed Network**: ens1np0 (40 Gbps InfiniBand)
+- **Container Networks**: Docker and Kubernetes (CNI) support
+- **Total Interfaces**: 14 network interfaces
 
-#### Storage Performance:
-- **Total I/O Operations**: 39.6M reads/writes
-- **Data Throughput**: 622.43 GB written, 25.26 GB read
-- **Storage Health**: All partitions show good disk space availability
-
-### 3.4 System Information
+### System Information
 - **Operating System**: Ubuntu 22.04 LTS
-- **Kernel Version**: 5.15.0-143-generic  
+- **Kernel**: Linux 5.15.0-143-generic
 - **Hostname**: ares.ares.local
-- **Uptime**: 15 days, 1 hours, 37 minutes (since 2025-07-04 14:15:08)
+- **Uptime**: 15 days, 1 hour, 47 minutes
 - **Active Users**: 16 concurrent users
-- **Python Version**: 3.12.0 (CPython, Clang 17.0.1)
+- **Python Version**: 3.12.0
 
-## 4. Software Environment
+## 4. Software Module Environment
 
-### 4.1 Module System
-- **System**: Lmod (Environment Modules)
+### Module System
+- **Module System**: Lmod
 - **Currently Loaded**: No modules loaded by default
-- **Available Modules**: 22 modules accessible
+- **Total Available Modules**: 26
 
-### 4.2 Available Software Stack
+### Available Module Categories
 
-#### Scientific Computing Libraries:
-- **HDF5**: Multiple versions (1.14.0, 1.14.5) with parallel support
-- **MPI Implementations**:
-  - OpenMPI 5.0.5 (primary)
-  - MPICH 4.1.1
-- **ADIOS/ADIOS2**: Multiple versions for high-performance I/O
-- **NetCDF**: Both C and Fortran interfaces available
-- **FFTW**: 3.3.10 for numerical computations
+#### Core Libraries and Tools
+- **GCC**: 11.4.0 (primary compiler)
+- **OpenSSL**: 3.4.0 (cryptographic library)
+- **YAML-CPP**: 0.8.0 (YAML parser)
+- **libjpeg-turbo**: 3.0.3 (image processing)
+- **libtirpc**: 1.3.3 (RPC library)
 
-#### Simulation and Modeling Software:
-- **LAMMPS**: Multiple versions (20220623.4, 20240829.1)
-- **OpenFOAM**: 2312 for computational fluid dynamics
-- **WRF**: 4.6.1 for weather research and forecasting
-- **ParaView**: 5.13.1 for visualization
+#### Python Ecosystem
+- **Python Build Tools**: 
+  - py-flit-core (3.9.0) - Python packaging
+  - py-tomli (2.0.1) - TOML parser
+  - py-typing-extensions (4.12.2) - Type extensions
+  - py-tabulate (0.9.0) - Table formatting
 
-#### Specialized Tools:
-- **Hermes**: 1.2.1 for heterogeneous memory management
-- **IOR**: 3.3.0 for I/O benchmarking
-- **IOWarp**: Main branch for I/O optimization
-- **Chimaera**: Distributed computing framework
+#### High-Performance Computing
+- **Mochi-Thallium**: 0.10.1 - High-performance RPC framework
+- **Multiple variants available**: Both standalone and GCC-compiled versions
 
-#### Development and Analysis:
-- **GCC**: 11.4.0 compiler suite
-- **Python Libraries**: Tabulate, TOML parsing, typing extensions
-- **YAML-cpp**: 0.8.0 for configuration parsing
+#### System Utilities
+- **TCSH**: 6.24.00 - Enhanced C shell
+- **Multiple architecture support**: skylake_avx512 optimized modules
 
-### 4.3 Container Support
-- **Docker**: Configured and available
-- **Podman**: Active with CNI networking
-- **Kubernetes**: Flannel networking detected
+#### Spack Integration
+- **Module Paths**:
+  - `/mnt/common/jcernudagarcia/spack/share/spack/modules/linux-ubuntu22.04-skylake_avx512`
+  - `/mnt/repo/software/spack/spack/share/spack/lmod/linux-ubuntu22.04-x86_64`
+  - `/mnt/repo/software/spack/spack/share/spack/lmod/linux-ubuntu22.04-x86_64/gcc/11.4.0`
 
-## 5. Storage and I/O Infrastructure
+## 5. Assessment and Recommendations
 
-### 5.1 Parallel Filesystem
-- **OrangeFS/PVFS2**: Configured for high-performance parallel I/O
-- **Mount Points**: Multiple storage tiers available
-- **Configuration Files**: Located in `/mnt/common/pfs_conf/`
+### Strengths
+1. **Rich Software Ecosystem**: Comprehensive collection of scientific computing tools
+2. **High-Performance Hardware**: Modern Xeon processors with substantial memory
+3. **Advanced Networking**: 40 Gbps InfiniBand for high-performance computing
+4. **Diverse Data Formats**: Support for HDF5, ADIOS, NetCDF, and other scientific formats
+5. **Active Research Environment**: Multiple concurrent users and ongoing projects
 
-### 5.2 Storage Tiers
-Evidence of multi-tier storage:
-- **NVMe**: High-performance storage for hot data
-- **SSD**: Intermediate performance storage
-- **HDD**: Large-capacity storage for cold data
+### Areas of Concern
+1. **Node Availability**: 13 of 32 nodes are down, reducing available capacity
+2. **High Allocation**: Most available nodes are fully allocated
+3. **Resource Contention**: Limited available resources for new workloads
 
-### 5.3 I/O Monitoring
-- **Darshan**: I/O profiling and analysis tools available
-- **Hermes**: Advanced I/O optimization and caching
-- **IOWarp**: I/O pattern analysis and optimization
+### Recommendations
+1. **Node Maintenance**: Address down nodes to restore full cluster capacity
+2. **Resource Monitoring**: Implement monitoring for resource availability
+3. **Module Usage**: Leverage the extensive software module ecosystem
+4. **Data Organization**: Establish centralized data storage for scientific datasets
+5. **Queue Management**: Consider implementing priority queuing for critical workloads
 
-## 6. Recommendations for Scientific Computing
+## 6. Technical Environment Summary
 
-### 6.1 Optimal Resource Utilization
-1. **Job Scheduling**: 4 nodes immediately available for new workloads
-2. **Memory Usage**: Excellent headroom (82GB available per node)
-3. **Network**: Leverage 40 Gbps InfiniBand for MPI-intensive applications
+- **Cluster Type**: Research HPC cluster
+- **Primary Use Cases**: Scientific computing, simulation, data analysis
+- **Architectural Highlights**: InfiniBand networking, substantial memory, modern CPUs
+- **Software Stack**: Comprehensive scientific computing environment with Spack-managed modules
+- **Current Status**: Production environment with high utilization
 
-### 6.2 Data Management Strategy
-1. **Large Datasets**: Utilize parallel I/O with ADIOS2 or HDF5-MPI
-2. **I/O Optimization**: Deploy Hermes for multi-tier storage caching
-3. **Data Transfer**: Use high-speed network interfaces for inter-node communication
-
-### 6.3 Software Environment Setup
-1. **Module Loading**: Configure application-specific module collections
-2. **MPI Applications**: OpenMPI 5.0.5 recommended for new developments
-3. **Visualization**: ParaView available for post-processing workflows
-
-## 7. Current Environment Status
-
-- **Cluster Health**: Good (15 days uptime, stable operation)
-- **Resource Availability**: 25% of nodes immediately available
-- **Storage**: Multiple PB-scale datasets accessible
-- **Network**: High-performance connectivity operational
-- **Software**: Comprehensive scientific computing stack ready
-
-This environment provides an excellent foundation for large-scale scientific computing, with particular strengths in:
-- Parallel computing and MPI applications
-- High-performance I/O and data management
-- Multi-physics simulations and modeling
-- Advanced visualization and post-processing
-
-The cluster is well-suited for data-intensive computational research across multiple scientific domains.
+This environment is well-suited for a wide range of scientific computing workloads, from molecular dynamics simulations to computational fluid dynamics and data analysis tasks.

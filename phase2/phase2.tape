@@ -1,4 +1,4 @@
-Output phase2.mp4
+Output phase2_1.mp4
 
 Require iowarp
 
@@ -7,17 +7,14 @@ Set Width 1200
 Set Height 1200
 Set Shell bash
 
-Sleep 500ms
-Type "iowarp mcp add arxiv -- uv run --with 'git+https://github.com/iowarp/scientific-mcps#subdirectory=Arxiv' arxiv-mcp"
-Enter
-Sleep 500ms
 Type "iowarp --dangerously-skip-permissions"
-Sleep 500ms
+Sleep 1s
 
 Hide
 Enter
 Sleep 1s
 Type "/clear"
+Sleep 500ms
 Enter
 Show
 Sleep 1s
@@ -39,5 +36,6 @@ Enter
 
 Sleep 150s
 
-Type "/exit"
+Type "/clear"
+Sleep 500ms
 Enter

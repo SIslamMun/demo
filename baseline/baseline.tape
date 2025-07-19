@@ -1,26 +1,63 @@
-Output baseline_wait.mp4
+Output baseline_1.mp4
 Require claude
 Set Theme "Catppuccin Frappe"
-Set FontFamily "FiraCode Nerd Font"
 Set Width 1200
 Set Height 1200
 Set Shell bash
+Set TypingSpeed 25ms
 
 Sleep 500ms
+
+Type "iowarp mcp add slurm -- uv run --with 'git+https://github.com/iowarp/scientific-mcps#subdirectory=Slurm' slurm-mcp"
+Sleep 500ms
+Enter
+Sleep 100ms
+
+Type "iowarp mcp add hardware -- uv run --with 'git+https://github.com/iowarp/scientific-mcps#subdirectory=Node_Hardware' node-hardware-mcp"
+Sleep 500ms
+Enter
+Sleep 100ms
+
+Type "iowarp mcp add lmod -- uv run --with 'git+https://github.com/iowarp/scientific-mcps#subdirectory=lmod' lmod-mcp"
+Sleep 500ms
+Enter
+Sleep 100ms
+
 Type "iowarp mcp add adios -- uv run --with 'git+https://github.com/iowarp/scientific-mcps#subdirectory=Adios' adios-mcp"
-Enter
 Sleep 500ms
-Type "iowarp mcp add context7 -- npx -y @upstash/context7-mcp"
 Enter
+Sleep 100ms
+
+Type "iowarp mcp add arxiv -- uv run --with 'git+https://github.com/iowarp/scientific-mcps#subdirectory=Arxiv' arxiv-mcp"
 Sleep 500ms
+Enter
+Sleep 100ms
+
+Type "iowarp mcp add pandas -- uv run --with 'git+https://github.com/iowarp/scientific-mcps#subdirectory=Pandas' pandas-mcp"
+Sleep 500ms
+Enter
+Sleep 100ms
+
+Type "iowarp mcp add slurm -- uv run --with 'git+https://github.com/iowarp/scientific-mcps#subdirectory=Slurm' slurm-mcp"
+Sleep 500ms
+Enter
+Sleep 100ms
+
+Type "iowarp mcp add jarvis -- uv run --with 'git+https://github.com/iowarp/scientific-mcps#subdirectory=Jarvis' jarvis-mcp"
+Sleep 500ms
+Enter
+Sleep 100ms
+
+Set TypingSpeed 50ms
 
 Type "iowarp --dangerously-skip-permissions"
-Sleep 500ms
+Sleep 1s
 
 Hide
 Enter
 Sleep 1s
 Type "/clear"
+Sleep 500ms
 Enter
 Show
 Sleep 1s
@@ -30,5 +67,6 @@ Enter
 
 Wait+Screen@60s /DONE/
 
-Type "/exit"
+Type "/clear"
+Sleep 500ms
 Enter

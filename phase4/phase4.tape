@@ -1,4 +1,4 @@
-Output phase4.mp4
+Output phase4_1.mp4
 
 Require iowarp
 
@@ -7,18 +7,15 @@ Set Width 1200
 Set Height 1200
 Set Shell bash
 
-Sleep 500ms
-Type "iowarp mcp add slurm -- uv run --with 'git+https://github.com/iowarp/scientific-mcps#subdirectory=Slurm' slurm-mcp"
-Enter
-Sleep 500ms
 
 Type "iowarp --dangerously-skip-permissions"
-Sleep 500ms
+Sleep 1s
 
 Hide
 Enter
 Sleep 1s
 Type "/clear"
+Sleep 500ms
 Enter
 Show
 Sleep 1s 
@@ -34,8 +31,7 @@ Enter
 Type "4. Document resource management decisions in `resource_allocation.md`"
 Enter
 
-#Wait+Screen@300s /DONE/
 Sleep 150s
-Sleep 2s
-Type "/exit"
+Type "/clear"
+Sleep 500ms
 Enter
