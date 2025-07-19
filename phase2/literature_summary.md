@@ -3,9 +3,44 @@
 ## Overview
 The Gray-Scott model is a reaction-diffusion system that describes chemical systems far from equilibrium. This literature review focuses on recent research developments in Gray-Scott model variations and applications, covering nonlocal extensions, fractional models, pattern formation, and computational approaches.
 
-## Top 5 Recent Gray-Scott Model Papers
+## Top 5 Recent Gray-Scott Model Papers (Updated with 2024 Research)
 
-### 1. A nonlocal Gray-Scott model: well-posedness and diffusive limit (2023)
+### 1. Dynamics of Chemical Orders in Formation of Striped Patterns in Metamorphic Rocks (2024)
+**Authors:** Bikash Kumar Sarkar, Swayambhoo Mitra, Manas Kumar Roy, Biswajit Saha  
+**ArXiv ID:** 2410.04735v1  
+**Publication Date:** October 7, 2024  
+
+**Abstract:**
+The striped patterns in rocks, characterized by thin dark bands and thick light bands, are a result of the natural processes that have shaped the rocks through in situ metamorphism. Notably, the dark and light bands are composed of similar minerals, with the dark bands containing additional trapped materials such as fluid pockets or extra mineral grains. Here we employed the Gray-Scott Reaction Diffusion model to investigate the interaction between two sets of virtual chemicals, denoted as 'u' and 'v'. The differing diffusion and reaction rates of 'u' and 'v' chemical orders lead to the formation of 180 degree out-of-phase chemical domains, resulting in striped patterns. Utilizing the Gray-Scott model in this manner, we gain valuable insights into the early microscopic stages of these geologically significant striped patterns in metamorphic rocks.
+
+**Key Methodologies:**
+- Application of Gray-Scott model to geological pattern formation
+- Study of diffusion and reaction rate differences in chemical systems
+- Analysis of 180-degree out-of-phase chemical domains
+- Modeling of early microscopic stages of geological processes
+- Interdisciplinary approach combining reaction-diffusion theory with geology
+
+---
+
+### 2. On Pattern Formation in the Thermodynamically-Consistent Variational Gray-Scott Model (2024)
+**Authors:** Wenrui Hao, Chun Liu, Yiwei Wang, Yahong Yang  
+**ArXiv ID:** 2409.04663v2  
+**Publication Date:** September 7, 2024 (Updated April 14, 2025)  
+
+**Abstract:**
+In this paper, we explore pattern formation in a four-species variational Gary-Scott model, which includes all reverse reactions and introduces a virtual species to describe the birth-death process in the classical Gray-Scott model. This modification transforms the classical Gray-Scott model into a thermodynamically consistent closed system. The classical two-species Gray-Scott model can be viewed as a subsystem of the variational model in the limiting case when the small parameter ε, related to the reaction rate of the reverse reactions, approaches zero. We numerically explore pattern formation in this physically more complete Gray-Scott model in one spatial dimension, using non-uniform steady states of the classical model as initial conditions.
+
+**Key Methodologies:**
+- Four-species variational Gray-Scott model development
+- Inclusion of all reverse reactions for thermodynamic consistency
+- Introduction of virtual species for birth-death processes
+- Numerical exploration in one spatial dimension
+- Energy stability analysis of uniform steady states
+- Pattern formation analysis with oscillating and traveling-wave patterns
+
+---
+
+### 3. A nonlocal Gray-Scott model: well-posedness and diffusive limit (2023)
 **Authors:** Philippe Laurençot, Christoph Walker  
 **ArXiv ID:** 2307.10627  
 **Publication Date:** July 20, 2023  
@@ -125,9 +160,17 @@ I show stable, localized, single and multi-spot patterns of three classes - stat
 - **Quasiparticle Behavior:** Spots acting as discrete particle-like entities
 - **Standing Wave Interactions:** Reinforcement mechanisms for pattern stability
 
-## Research Gap: Limited 2024-2025 Publications
+## Recent Developments in 2024
 
-**Note:** The search for Gray-Scott model papers specifically from 2024-2025 yielded limited results. The most recent significant contributions are from 2023 (nonlocal models) and 2022-2024 (updated nonlocal analysis). This suggests potential opportunities for new research in:
+**Update:** Recent search has identified new 2024 publications that significantly expand Gray-Scott model applications:
+
+1. **Geological Applications (2024):** Novel application to metamorphic rock pattern formation, demonstrating the model's versatility beyond traditional chemical systems.
+
+2. **Thermodynamically Consistent Models (2024):** Development of four-species variational models that include reverse reactions, making the system thermodynamically consistent.
+
+3. **Mathematical Rigor (2024):** Continued advancement in explicit solution methods using Riccati systems for variable coefficient systems.
+
+These recent developments suggest active research areas in:
 
 1. Machine learning applications to Gray-Scott systems
 2. Advanced computational methods for high-dimensional Gray-Scott models
