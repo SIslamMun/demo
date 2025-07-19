@@ -1,4 +1,4 @@
-Output phase1_2.mp4
+Output phase1_3.mp4
 
 Require iowarp
 
@@ -7,19 +7,8 @@ Set Width 1200
 Set Height 1200
 Set Shell bash
 
-Sleep 500ms
-Type "iowarp mcp add slurm -- uv run --with 'git+https://github.com/iowarp/scientific-mcps#subdirectory=Slurm' slurm-mcp"
-Enter
-Sleep 500ms
-Type "iowarp mcp add hardware -- uv run --with 'git+https://github.com/iowarp/scientific-mcps#subdirectory=Node_Hardware' node-hardware-mcp"
-Enter
-Sleep 500ms
-Type "iowarp mcp add lmod -- uv run --with 'git+https://github.com/iowarp/scientific-mcps#subdirectory=lmod' lmod-mcp"
-Enter
-Sleep 500ms
-
 Type "iowarp --dangerously-skip-permissions"
-Sleep 500ms
+Sleep 1s
 
 Hide
 Enter
@@ -44,5 +33,6 @@ Type "5. Create initial environment assessment in `environment_discovery.md``
 Enter
 Sleep 150s
 
-Type "/exit"
+Type "/clear"
+Sleep 500ms
 Enter
