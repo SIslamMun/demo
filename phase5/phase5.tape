@@ -7,11 +7,6 @@ Set Width 1200
 Set Height 1200
 Set Shell bash
 
-Sleep 500ms
-Type "iowarp mcp add jarvis -- uv run --with 'git+https://github.com/iowarp/scientific-mcps#subdirectory=Jarvis' jarvis-mcp"
-Enter
-Sleep 500ms
-
 Type "iowarp --dangerously-skip-permissions"
 Sleep 500ms
 
@@ -19,6 +14,7 @@ Hide
 Enter
 Sleep 1s
 Type "/clear"
+Sleep 500ms
 Enter
 Show
 Sleep 1s 
@@ -39,7 +35,8 @@ Type "6. Run the job.\"
 Enter
 Type "7. Document the location of the results."
 Enter
-Sleep 250s
+Sleep 400s
 
-Type "/exit"
+Type "/clear"
+Sleep 500ms
 Enter
