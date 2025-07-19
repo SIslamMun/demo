@@ -33,7 +33,9 @@ Type "3. Generate a hostfile 'jarvis.hostfile' with the selected nodes\"
 Enter
 Type "4. Document resource management decisions in `resource_allocation.md`"
 Enter
-Sleep 150s
 
+Wait+Screen@300s /Phase 4: Done/
+
+Sleep 2s
 Type "/exit"
 Enter
