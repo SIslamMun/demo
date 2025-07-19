@@ -4,7 +4,6 @@ Set Theme "Catppuccin Frappe"
 Set Width 1200
 Set Height 1200
 Set Shell bash
-Set TypingSpeed 25ms
 
 Sleep 500ms
 
@@ -48,7 +47,6 @@ Sleep 500ms
 Enter
 Sleep 100ms
 
-Set TypingSpeed 50ms
 
 Type "iowarp --dangerously-skip-permissions"
 Sleep 1s
@@ -65,8 +63,9 @@ Sleep 1s
 Type "Hello. Who are you?"
 Enter
 
-Wait+Screen@60s /DONE/
+Sleep 10s
 
+Sleep 500ms
 Type "/clear"
 Sleep 500ms
 Enter
