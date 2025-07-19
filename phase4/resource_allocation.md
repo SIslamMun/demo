@@ -1,43 +1,32 @@
 # Resource Allocation Report - Phase 4
 
-## Initial Strategy
-- **Target**: 8 nodes for optimal performance
-- **Approach**: Standard allocation request via Slurm
+## Overview
+Phase 4 demonstrated adaptive resource management by initially requesting 8 nodes, discovering resource constraints, and successfully adapting to allocate the available 4 nodes.
 
-## Resource Discovery
-- **Cluster Analysis**: Performed comprehensive node inventory
-- **Available Resources**: Only 4 nodes in idle state (ares-comp-27 through ares-comp-30)
-- **Constraint Identified**: Cluster capacity limited to 4 idle nodes
-- **Other Nodes Status**: 
-  - 13 nodes allocated
-  - 13 nodes down
-  - 2 nodes drained
+## Initial Resource Request
+- **Requested**: 8 nodes
+- **Status**: Allocation timed out after 60 seconds
+- **Action**: Cancelled pending job (ID: 4941)
 
-## Adaptive Decision
-- **Initial Allocation Attempt**: 8 nodes - resulted in timeout due to insufficient resources
-- **Adaptation Strategy**: Reduced allocation to 4 nodes to match available capacity
-- **Final Allocation**: Successfully secured 4 nodes (ares-comp-27, ares-comp-28, ares-comp-29, ares-comp-30)
+## Cluster Analysis
+- **Available Resources**: 4 idle nodes (ares-comp-[27-30])
+- **Constraint**: 13 nodes already allocated to another job
+- **Drained/Down**: 15 nodes unavailable
 
-## Resource Specifications
-- **Allocated Nodes**: 4
-- **Node Names**: ares-comp-[27-30]
-- **CPUs per Node**: 40 cores
-- **Total Available CPUs**: 160 cores
-- **Memory per Node**: Configured
-- **Job ID**: 4940
+## Adaptive Strategy
+- **Adapted to**: 4 nodes (100% of available resources)
+- **Allocation ID**: 4942
 - **Time Limit**: 3 hours
+- **Status**: Successfully allocated
 
-## Optimization Considerations
-- **Efficiency**: 100% utilization of available idle resources
-- **Scalability**: Framework established for dynamic resource adaptation
-- **Performance**: 4-node configuration provides substantial compute capacity
-- **Reliability**: All allocated nodes in healthy idle state
+## Final Resource Allocation
+- **Nodes**: 4
+- **Node List**: ares-comp-27, ares-comp-28, ares-comp-29, ares-comp-30
+- **Hostfile**: jarvis.hostfile created
 
-## Files Generated
-- **Hostfile**: `jarvis.hostfile` containing the 4 allocated nodes
-- **Documentation**: This resource allocation report
-
-## Lessons Learned
-- Resource constraints require adaptive allocation strategies
-- Real-time cluster analysis essential for optimal resource utilization
-- 4-node allocation demonstrates successful constraint adaptation
+## Resource Management Decisions
+1. **Proactive Resource Discovery**: Checked cluster status to understand availability
+2. **Adaptive Scaling**: Reduced from 8 to 4 nodes based on actual availability
+3. **Optimal Utilization**: Secured 100% of available idle resources
+4. **Time Management**: Set 3-hour allocation window for sufficient runtime
+EOF < /dev/null
