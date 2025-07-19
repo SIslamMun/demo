@@ -1,4 +1,4 @@
-Output phase1.mp4
+Output phase1_2.mp4
 
 Require iowarp
 
@@ -25,6 +25,7 @@ Hide
 Enter
 Sleep 1s
 Type "/clear"
+Sleep 500ms
 Enter
 Show
 Sleep 1s 
