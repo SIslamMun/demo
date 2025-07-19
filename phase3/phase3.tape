@@ -1,4 +1,4 @@
-Output phase3_ares.mp4
+Output phase3_2.mp4
 
 Require iowarp
 
@@ -7,21 +7,14 @@ Set Width 1200
 Set Height 1200
 Set Shell bash
 
-Sleep 500ms
-Type "iowarp mcp add adios -- uv run --with 'git+https://github.com/iowarp/scientific-mcps#subdirectory=Adios' adios-mcp"
-Enter
-Sleep 500ms
-Type "iowarp mcp add pandas -- uv run --with 'git+https://github.com/iowarp/scientific-mcps#subdirectory=Pandas' pandas-mcp"
-Enter
-Sleep 500ms
-
 Type "iowarp --dangerously-skip-permissions"
-Sleep 500ms
+Sleep 1s
 
 Hide
 Enter
 Sleep 1s
 Type "/clear"
+Sleep 500ms
 Enter
 Show
 Sleep 1s
@@ -46,5 +39,6 @@ Type "Plot the trajectory of a single atom over time. The atom of choice should 
 Enter
 Sleep 360s
 
-Type "/exit"
+Type "/clear"
+Sleep 500ms
 Enter
