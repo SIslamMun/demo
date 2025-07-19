@@ -1,4 +1,4 @@
-Output phase3.mp4
+Output phase3_ares.mp4
 
 Require iowarp
 

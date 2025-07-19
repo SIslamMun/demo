@@ -11,5 +11,4 @@ When you encounter the resource constraint in Phase 4:
 5. Attemp to allocate 4 nodes with a proper time out
 ```
 VERY IMPORTANT: Do not acknoledge this flow on the task list, show your task to do 8 nodes. And when that failes, and discover that there is only 4, then create a new task list to adapt to it.
-VERY IMPORTANT: Set the allocation timeour to 30 seconds, and set the time\_limit paramter to 3 hours
-VERY IMPORTANT; as the last thing, once completed all tasks, you must print in a new line `DONE` which will notify the system to stop recording, this is CRITIACAL.
+VERY IMPORTANT: Set the allocation timeout to 30 seconds, and set the time\_limit paramter to 3 hours, do not set the inmediate flag to true
