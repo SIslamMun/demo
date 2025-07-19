@@ -7,43 +7,24 @@ This report presents a comprehensive assessment of the Ares HPC cluster environm
 ## 1. Scientific Data Inventory
 
 ### 1.1 Available Data Formats and Locations
-The filesystem exploration revealed extensive scientific datasets across multiple locations:
+The filesystem exploration revealed scientific datasets in the following locations:
 
 #### Key Data Repositories:
-- **Location**: `/mnt/common/datasets/`
-- **Size**: Over 40,000 files across multiple directories
-- **Primary Formats Discovered**:
-  - HDF5 files (`.h5`, `.hdf5`)
-  - CSV data files (`.csv`) 
-  - Binary data files (`.dat`)
-  - ADIOS2 BP5 format files (`.bp`, `.bp5`)
-  - NetCDF files (`.nc`)
-  - Parquet files (`.parquet`)
+- **User Data**: `/mnt/common/user-data/mtang11/hermes_stage/`
+  - Contains HDF5 I/O test data (CSV format)
+  - Hermes VFD benchmarking data
+  - Build and configuration files
 
-#### Notable Dataset Collections:
-1. **1000 Genome Project Data** (`/mnt/common/datasets/1000-genome/`)
-   - Multiple releases (2008-2010)
-   - Genomic variant data, haplotype information
-   - Sample data for CEU, YRI, JPTCHB populations
-
-2. **Scientific Application Data**:
-   - **TeraFusion**: Remote sensing data processing
-   - **DeepDriveMD**: Molecular dynamics simulation data
-   - **FlexTRKR**: Weather tracking and analysis datasets
-   - **Beacon**: Genomic query datasets
-   - **Darshan traces**: I/O performance monitoring data
-
-3. **Research User Data** (`/mnt/common/user-data/`):
-   - Multiple user directories with simulation outputs
-   - Hermes I/O optimization datasets
-   - Access pattern analysis data (`.parquet` format)
-   - Molecular dynamics trajectories
+#### Limited Data Discovery:
+- **Chrome/Chromium Configuration**: Various JSON files in backup directories
+- **Spack Package Management**: Extensive JSON schema files and configurations
+- **Build Artifacts**: CMake and development tool configurations
 
 ### 1.2 Data Access Patterns
 Analysis of existing data shows:
-- High-performance I/O patterns for large-scale simulations
-- Parallel filesystem usage (OrangeFS/PVFS2)
-- Storage across multiple tiers (HDD, SSD, NVMe)
+- Limited scientific datasets currently accessible
+- Configuration and system files primarily in JSON format
+- Build and development environments present
 
 ## 2. Cluster Resource Assessment
 
@@ -53,61 +34,65 @@ Analysis of existing data shows:
 - **Total Nodes**: 32 compute nodes (`ares-comp-[01-32]`)
 
 #### Node Status Distribution:
-- **Available Idle**: 4 nodes (`ares-comp-[27-30]`)
-- **Allocated**: 13 nodes (currently in use)
+- **Available/Mixed**: 4 nodes (`ares-comp-[27-30]`) - 2 CPUs allocated, 38 idle per node
+- **Allocated**: 13 nodes (fully allocated)
 - **Down**: 13 nodes (maintenance/offline)
-- **Drained**: 2 nodes (administrative hold)
+- **Drained**: 2 nodes (`ares-comp-[03,13]`) - administrative hold
 
 #### Resource Specifications per Node:
-- **CPUs**: 40 cores per node (520 total allocated)
-- **Memory**: Detailed memory specifications available
+- **CPUs**: 40 cores per node
+- **Memory**: Not specified in node info (shows "1" placeholder)
 - **Time Limit**: 2 days maximum job duration
 
 #### Current Utilization:
-- **Active Jobs**: 1 running (interactive session by jcernudagarcia)
+- **Active Jobs**: 2 running
+  - Job 4912: Interactive session (13 nodes, 520 CPUs, 3:33:48 runtime)
+  - Job 4942: MCP allocation (4 nodes, 8 CPUs, 10:38 runtime)
 - **Queue Status**: No pending jobs
-- **Available Capacity**: 4 idle nodes (160 cores) ready for scheduling
+- **Available Capacity**: 4 mixed nodes with 152 idle cores total
 
 ### 2.2 Partition Configuration
 - **Primary Partition**: `compute`
-- **Access Policy**: Standard HPC scheduling
+- **Access Policy**: Standard HPC scheduling with 2-day time limits
 - **Resource Allocation**: Dynamic based on job requirements
 
 ## 3. Hardware Specifications
 
 ### 3.1 CPU Configuration
 - **Processor**: Intel(R) Xeon(R) Silver 4114 CPU @ 2.20GHz
-- **Architecture**: x86_64 (Skylake AVX512)
+- **Architecture**: x86_64
 - **Physical Cores**: 20 per node
 - **Logical Cores**: 40 per node (hyperthreading enabled)
-- **Current Frequency**: 2.137 GHz
-- **Load Average**: 4.62 (1-min), 3.91 (5-min), 4.21 (15-min)
+- **Current Frequency**: 2.17 GHz average
+- **Load Average**: 4.63 (1-min), 3.53 (5-min), 3.74 (15-min)
+- **Average CPU Usage**: 9.78% across all cores
 
 ### 3.2 Memory Configuration
 - **Total Memory**: 94.07 GB per node
-- **Available Memory**: 82.16 GB
-- **Used Memory**: 11.00 GB (12.7% utilization)
-- **Swap Space**: 8.00 GB (0.8% used)
+- **Available Memory**: 82.05 GB
+- **Used Memory**: 11.11 GB (12.8% utilization)
+- **Swap Space**: 8.00 GB (0.8% used - 65.13 MB)
+- **Cached Memory**: 77.80 GB
 - **Memory Efficiency**: Excellent availability for large-scale computations
 
-### 3.3 Network Infrastructure
-- **Primary Interface**: eno1 (1 Gbps external connectivity)
-- **High-Speed Interface**: ens1np0 (40 Gbps InfiniBand)
-- **Internal Networks**: Multiple private subnets for cluster communication
-- **Container Support**: Docker and Podman networking configured
+### 3.3 Storage Configuration
+- **Root Partition** (`/`): 1006.85 GB total, 661.07 GB free (29.3% used)
+- **Common Storage** (`/mnt/common`): 43.47 TB total, 37.25 TB free (14.3% used)
+- **Repository Storage** (`/mnt/repo`): 99.95 GB total, 26.39 GB free (73.6% used)
+- **Boot EFI**: 299.39 MB total, 293.30 MB free (2.0% used)
 
-#### Network Performance:
-- **Total Data Transferred**: 362.1 GB (sent + received)
-- **High-Speed Connectivity**: 40 Gbps available for MPI communications
-- **Network Reliability**: No errors detected on primary interfaces
+#### Storage Performance:
+- **Total I/O Operations**: 39.6M reads/writes
+- **Data Throughput**: 622.43 GB written, 25.26 GB read
+- **Storage Health**: All partitions show good disk space availability
 
 ### 3.4 System Information
 - **Operating System**: Ubuntu 22.04 LTS
-- **Kernel Version**: 5.15.0-143-generic
+- **Kernel Version**: 5.15.0-143-generic  
 - **Hostname**: ares.ares.local
-- **Uptime**: 15 days, 1 hours, 20 minutes
-- **Active Users**: 17 concurrent users
-- **Python Version**: 3.12.0
+- **Uptime**: 15 days, 1 hours, 37 minutes (since 2025-07-04 14:15:08)
+- **Active Users**: 16 concurrent users
+- **Python Version**: 3.12.0 (CPython, Clang 17.0.1)
 
 ## 4. Software Environment
 
