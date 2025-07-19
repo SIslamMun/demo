@@ -31,7 +31,7 @@ Enter
 Type "4. Document resource management decisions in `resource_allocation.md`"
 Enter
 
-Sleep 150s
+Sleep 300s
 Type "/clear"
 Sleep 500ms
 Enter

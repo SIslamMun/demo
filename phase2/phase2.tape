@@ -34,7 +34,7 @@ Enter
 Type "5. Download the found papers to a 'literature' folder"
 Enter
 
-Sleep 150s
+Sleep 300s
 
 Type "/clear"
 Sleep 500ms
