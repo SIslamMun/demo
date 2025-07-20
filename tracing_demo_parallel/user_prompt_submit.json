@@ -1,0 +1,9 @@
+[
+  {
+    "session_id": "90afd230-2709-4914-8955-86a85f18545b",
+    "transcript_path": "/home/jcernuda/.claude/projects/-home-jcernuda-demo-tracing-demo-parallel-iowarp-runtime/90afd230-2709-4914-8955-86a85f18545b.jsonl",
+    "cwd": "/home/jcernuda/demo/tracing_demo_parallel/iowarp-runtime",
+    "hook_event_name": "UserPromptSubmit",
+    "prompt": "Launch multiple subagents to explore the code base and generate a folder wiki with full knoledge of the design and architecture of the code with tecnical details"
+  }
+]
