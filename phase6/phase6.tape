@@ -29,7 +29,16 @@ Type "3. Identify key patterns and recommendations\"
 Enter
 Type "4. Generate comprehensive summary in `scientific_workflow_summary.md`"
 Enter
-Sleep 150s
+Sleep 170s
 
 Type "/exit"
+Sleep 500ms
 Enter
+
+Type "ls"
+Sleep 500ms
+Enter
+
+Type "vim scientific_workflow_summary.md"
+Sleep 500ms
+Enter 
