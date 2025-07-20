@@ -29,11 +29,9 @@ Type "3. Build the jarvis enviornment.\"
 Enter
 Type "4. Append the Gray Scott application.\"
 Enter
-Type "5. Configure Gray Scott for a small run with 5 steps and a grid size of 8 with the outputs stored in the current folder.\"
+Type "5. Run the job.\"
 Enter
-Type "6. Run the job.\"
-Enter
-Type "7. Document the location of the results."
+Type "6. Document the results of the phase `jarvis_summary.md`"
 Enter
 Sleep 400s
 
