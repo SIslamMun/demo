@@ -1,0 +1,30 @@
+[
+  {
+    "session_id": "90afd230-2709-4914-8955-86a85f18545b",
+    "transcript_path": "/home/jcernuda/.claude/projects/-home-jcernuda-demo-tracing-demo-parallel-iowarp-runtime/90afd230-2709-4914-8955-86a85f18545b.jsonl",
+    "cwd": "/home/jcernuda/demo/tracing_demo_parallel/iowarp-runtime",
+    "hook_event_name": "SubagentStop",
+    "stop_hook_active": false
+  },
+  {
+    "session_id": "90afd230-2709-4914-8955-86a85f18545b",
+    "transcript_path": "/home/jcernuda/.claude/projects/-home-jcernuda-demo-tracing-demo-parallel-iowarp-runtime/90afd230-2709-4914-8955-86a85f18545b.jsonl",
+    "cwd": "/home/jcernuda/demo/tracing_demo_parallel/iowarp-runtime",
+    "hook_event_name": "SubagentStop",
+    "stop_hook_active": false
+  },
+  {
+    "session_id": "90afd230-2709-4914-8955-86a85f18545b",
+    "transcript_path": "/home/jcernuda/.claude/projects/-home-jcernuda-demo-tracing-demo-parallel-iowarp-runtime/90afd230-2709-4914-8955-86a85f18545b.jsonl",
+    "cwd": "/home/jcernuda/demo/tracing_demo_parallel/iowarp-runtime",
+    "hook_event_name": "SubagentStop",
+    "stop_hook_active": false
+  },
+  {
+    "session_id": "90afd230-2709-4914-8955-86a85f18545b",
+    "transcript_path": "/home/jcernuda/.claude/projects/-home-jcernuda-demo-tracing-demo-parallel-iowarp-runtime/90afd230-2709-4914-8955-86a85f18545b.jsonl",
+    "cwd": "/home/jcernuda/demo/tracing_demo_parallel/iowarp-runtime",
+    "hook_event_name": "SubagentStop",
+    "stop_hook_active": false
+  }
+]

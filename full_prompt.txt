@@ -1,0 +1,44 @@
+Baseline: Hello. Who are you?
+
+Phase 1: Environment Discovery\"
+1. Explore the filesystem to discover available scientific data files
+2. Use the slurm MCP to check the current cluster status and available resources of the cluster
+3. Use the hardware MCP to query the node hardware specifications
+4. Use the lmod MCP to list all available software modules
+5. Create initial environment assessment in `environment_discovery.md`
+
+Phase 2: Literature Context Gathering
+Using the ArXiv mcp server. Can you:
+1. Search ArXiv for "Gray-Scott model" papers from 2024-2025
+2. Filter to top 5 most recent papers
+3. Extract abstracts and key methodologies
+4. Write them down on `literature_aummary.md`
+5. Download the found papers to a 'literature' folder
+
+Phase 3: Multi-Format Data Processing
+1. Load and analyze the `data/nanoparticles.bp5` ADIOS dataset with the Adios MCP
+2. Generate a report of this dataset
+3. Load the `data/sensor_data.csv` using the Pandas MCP
+4. Generate a summary of this dataset
+5. Create a `data_inventory_report.md` file with the report from both datasets`
+
+Phase 4: Adaptive Resource Management
+1. Explore optimal resource allocation
+2. Successfully secure resources via Slurm
+3. Generate a hostfile 'jarvis.hostfile' with the selected nodes
+4. Document resource management decisions in `resource_allocation.md`
+
+Phase 5: Computational Workflow Execution:
+1. Initialize Jarvis pipeline.
+2. Configure it for the available node allocation with the `jarvis.hostfile`.
+3. Build the jarvis enviornment.
+4. Append the Gray Scott application.
+5. Configure Gray Scott for a small run with 5 steps and a grid size of 8 with the outputs stored in the current folder.
+6. Run the job.
+7. Document the location of the results.
+
+Phase 6: Insight Synthesis & Reporting
+1. Correlate literature findings with collected data
+2. Assess data quality across all sources
+3. Identify key patterns and recommendations
+4. Generate comprehensive summary in `scientific_workflow_summary.md`

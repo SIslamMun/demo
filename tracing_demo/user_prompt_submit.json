@@ -1,0 +1,16 @@
+[
+  {
+    "session_id": "bc70499f-a369-49a7-a2b3-758cff00ad6b",
+    "transcript_path": "/home/jcernuda/.claude/projects/-home-jcernuda-demo-tracing-demo-iowarp-runtime/bc70499f-a369-49a7-a2b3-758cff00ad6b.jsonl",
+    "cwd": "/home/jcernuda/demo/tracing_demo/iowarp-runtime",
+    "hook_event_name": "UserPromptSubmit",
+    "prompt": "/init "
+  },
+  {
+    "session_id": "bc70499f-a369-49a7-a2b3-758cff00ad6b",
+    "transcript_path": "/home/jcernuda/.claude/projects/-home-jcernuda-demo-tracing-demo-iowarp-runtime/bc70499f-a369-49a7-a2b3-758cff00ad6b.jsonl",
+    "cwd": "/home/jcernuda/demo/tracing_demo/iowarp-runtime",
+    "hook_event_name": "UserPromptSubmit",
+    "prompt": "Can you go through the code base, explore it and generate a folder wiki with full knoledge of the design and architecture of the code with tecnical details"
+  }
+]
